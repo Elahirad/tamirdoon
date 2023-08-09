@@ -22,16 +22,7 @@ module.exports = {
                 }
             },
             PhoneNumber: {
-                type: Sequelize.DataTypes.STRING,
-                validate: {
-                    isPhoneNumberFormat(value) {
-                        const phoneNumberRegex = /^\d{11}$/;
-
-                        if (!phoneNumberRegex.test(value)) {
-                            throw new Error('Invalid phone number format. Please use XXXX-XXX-XXXX.');
-                        }
-                    }
-                }
+                type: Sequelize.DataTypes.STRING
             },
             email: {
                 type: Sequelize.DataTypes.STRING,
@@ -43,15 +34,7 @@ module.exports = {
             },
             password: {
                 type: Sequelize.DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    isStrongPassword(value){
-                        const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/;
-
-                        if(!strongPasswordRegex.test(value))
-                            throw new Error('Its not strong password.');
-                    }
-                }
+                allowNull: false
             },
             emailIsVerified: {
                 type: Sequelize.DataTypes.BOOLEAN,

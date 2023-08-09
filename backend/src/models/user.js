@@ -43,15 +43,7 @@ const User = sequelize.define('User', {
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            isStrongPassword(value){
-                const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/;
-
-                if(!strongPasswordRegex.test(value))
-                    throw new Error('Its not strong password.');
-            }
-        }
+        allowNull: false
     },
     emailIsVerified: {
         type: DataTypes.BOOLEAN,
