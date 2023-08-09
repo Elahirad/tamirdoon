@@ -21,7 +21,7 @@ const User = sequelize.define('User', {
             max: 50
         }
     },
-    PhoneNumber: {
+    phoneNumber: {
         type: DataTypes.STRING,
         validate: {
             isPhoneNumberFormat(value) {
