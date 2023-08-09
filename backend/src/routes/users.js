@@ -24,7 +24,7 @@ router.post('/sign-up', async (req, res) => {
 
     const token = user.generateAuthToken();
     res.cookie('x-auth-token', token, { httpOnly: true });
-    res.send(user);
+    res.send(_.pick(user, ['id', 'name', 'lastName', 'email', 'phoneNumber']));
 });
 
 module.exports = router;
