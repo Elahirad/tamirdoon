@@ -66,7 +66,7 @@ User.hasOne(Image, {
     foreignKey: 'ImageId',
 });
 
-function userValidate(user) {
+function userSignUpValidate(user) {
     const schema = Joi.object({
         name: Joi.string().min(2).max(50).required(),
         lastName: Joi.string().min(2).max(50).required(),
@@ -76,4 +76,12 @@ function userValidate(user) {
     })
     return schema.validate(user);
 }
-module.exports = { User, userValidate };
+
+function userSignInValidate(user){
+    const schema = Joi.object({
+        email: Joi.string().email().required(),
+        password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/).required()
+    })
+    return schema.validate(user);
+}
+module.exports = { User, userSignUpValidate, userSignInValidate };
