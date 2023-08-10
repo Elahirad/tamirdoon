@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   mysql_db:
@@ -12,6 +12,8 @@ services:
       MYSQL_PASSWORD: Admin1234
     ports:
       - '3306:3306'
+    volumes:
+      - ./mysql_data:/var/lib/mysql
   backend-service:
     build: ./backend
     restart: always
