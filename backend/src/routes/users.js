@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 const {User, userSignUpValidate, userSignInValidate} = require("../models/user");
 const {Op} = require("sequelize");
+const auth = require('../middlewares/auth');
 
 router.post('/sign-up', async (req, res) => {
     const {error} = userSignUpValidate(req.body);
@@ -56,5 +57,9 @@ router.post('/sign-in', async (req, res) => {
     res.cookie('x-auth-token', token, {httpOnly: true});
     res.send(_.pick(user, ['id', 'name', 'lastName', 'email', 'phoneNumber']));
 })
+
+router.get('/is-logged-in', auth, (req, res) => {
+    res.sendStatus(200);
+});
 
 module.exports = router;
