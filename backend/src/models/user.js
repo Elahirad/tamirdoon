@@ -84,8 +84,8 @@ function userSignUpValidate(user) {
 
 function userSignInValidate(user) {
     const schema = Joi.object({
-        email: Joi.string().email().required(),
-        password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/).required()
+        username: Joi.string().required(),
+        password: Joi.string().required()
     })
     return schema.validate(user);
 }
