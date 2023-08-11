@@ -31,7 +31,12 @@ router.post('/sign-up', async (req, res) => {
     await user.save();
 
     const token = user.generateAuthToken();
-    res.cookie('x-auth-token', token, {httpOnly: true});
+    res.cookie('x-auth-token', token, {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: true
+    });
     res.send(_.pick(user, ['id', 'name', 'lastName', 'email', 'phoneNumber']));
 });
 
@@ -54,7 +59,12 @@ router.post('/sign-in', async (req, res) => {
     if (!validPassword) return res.status(400).send('Invalid email or password.');
 
     const token = user.generateAuthToken();
-    res.cookie('x-auth-token', token, {httpOnly: true});
+    res.cookie('x-auth-token', token, {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: true
+    });
     res.send(_.pick(user, ['id', 'name', 'lastName', 'email', 'phoneNumber']));
 })
 
