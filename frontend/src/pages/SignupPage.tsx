@@ -10,7 +10,6 @@ import {
 import FormContainer from "../components/FormContainer";
 import * as Yup from 'yup';
 import {Field, Form, Formik, FormikHelpers} from "formik";
-import {useState} from "react";
 import apiClient from "../services/apiClient.ts";
 
 const SignupSchema = Yup.object().shape({
@@ -49,10 +48,8 @@ interface FormValues {
 
 const Signup = () => {
     const toast = useToast();
-    const [error, setError] = useState('');
     const submitHandler = (values: FormValues, actions: FormikHelpers<FormValues>) => {
-        const {name, lastName, email, phoneNumber, password, password_repeat} = values
-        if (password !== password_repeat) return setError('رمز عبور و تکرار آن تطابق ندارند');
+        const {name, lastName, email, phoneNumber, password} = values
         apiClient.post('/users/sign-up', {
             name,
             lastName,
@@ -62,7 +59,6 @@ const Signup = () => {
         })
             .then(() => {
                 actions.resetForm();
-                setError('');
                 toast({
                     title: 'حساب ساخته شد.',
                     description: "حساب کاربری شما با موفقیت ساخته شد",
@@ -184,7 +180,6 @@ const Signup = () => {
                             {errors.password_repeat && touched.password_repeat ?
                                 <Text color='red'>{errors.password_repeat}</Text> : null}
                         </FormControl>
-                        {error && <Text color='red'>{error}</Text>}
                         <Button
                             bgGradient="linear(to-r, red.400, pink.400)"
                             color="white"
