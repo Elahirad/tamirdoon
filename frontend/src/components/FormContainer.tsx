@@ -19,6 +19,7 @@ const FormContainer = ({ children }: Props) => {
           borderColor={useColorModeValue("gray.200", "gray.700")}
           boxShadow="lg"
           bgColor={useColorModeValue("white", "gray.800")}
+          width="30vw"
         >
           {children}
         </VStack>
