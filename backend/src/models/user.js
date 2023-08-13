@@ -67,9 +67,9 @@ User.prototype.generateAuthToken = function () {
     }, config.get('jwtPrivateKey'));
 }
 
-User.hasOne(Image);
+Image.hasOne(User);
 
-Image.belongsTo(User);
+User.belongsTo(Image);
 
 function userSignUpValidate(user) {
     const schema = Joi.object({
