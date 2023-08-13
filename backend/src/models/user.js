@@ -1,6 +1,7 @@
 const {DataTypes} = require("sequelize");
 const {sequelize} = require("../../config/db.js");
 const {Image} = require('./image');
+const {Client} = require('./client');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const Joi = require('joi');
@@ -68,8 +69,10 @@ User.prototype.generateAuthToken = function () {
 }
 
 Image.hasOne(User);
-
 User.belongsTo(Image);
+
+Client.hasOne(User);
+User.belongsTo(Client);
 
 function userSignUpValidate(user) {
     const schema = Joi.object({
