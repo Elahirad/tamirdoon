@@ -74,6 +74,15 @@ User.belongsTo(Image);
 Client.hasOne(User);
 User.belongsTo(Client);
 
+User.beforeCreate(async (user) => {
+    try {
+        const client = await Client.create();
+        user.ClientId = client.id;
+    } catch (error) {
+        throw new Error('Error creating client for user');
+    }
+});
+
 function userSignUpValidate(user) {
     const schema = Joi.object({
         name: Joi.string().min(2).max(50).required(),
