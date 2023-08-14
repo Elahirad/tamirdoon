@@ -1,5 +1,6 @@
 const {DataTypes} = require("sequelize");
 const {sequelize} = require("../../config/db.js");
+const {User} = require('./user');
 
 const Ad = sequelize.define('Ad', {
     title: {
@@ -13,5 +14,13 @@ const Ad = sequelize.define('Ad', {
     },
     SuggestedPrice: {
         type: DataTypes.STRING
+    },
+    isClosed: {
+        type: DataTypes.BOOLEAN
     }
 });
+
+User.hasMany(Ad);
+Ad.belongsTo(User);
+
+module.exports = Ad;
