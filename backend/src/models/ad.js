@@ -18,7 +18,7 @@ const Ad = sequelize.define('Ad', {
     isClosed: {
         type: DataTypes.BOOLEAN
     }
-});
+}, {tableName: 'ads'});
 
 User.hasMany(Ad);
 Ad.belongsTo(User);
