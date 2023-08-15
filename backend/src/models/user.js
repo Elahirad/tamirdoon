@@ -1,6 +1,7 @@
 const {DataTypes} = require("sequelize");
 const {sequelize} = require("../../config/db.js");
 const {Image} = require('./image');
+const Client = require('./client');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const Joi = require('joi');
@@ -67,9 +68,20 @@ User.prototype.generateAuthToken = function () {
     }, config.get('jwtPrivateKey'));
 }
 
-User.hasOne(Image);
+Image.hasOne(User);
+User.belongsTo(Image);
 
-Image.belongsTo(User);
+Client.hasOne(User);
+User.belongsTo(Client);
+
+User.beforeCreate(async (user) => {
+    try {
+        const client = await Client.create();
+        user.ClientId = client.id;
+    } catch (error) {
+        throw new Error('Error creating client for user');
+    }
+});
 
 function userSignUpValidate(user) {
     const schema = Joi.object({

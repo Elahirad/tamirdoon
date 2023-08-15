@@ -13,4 +13,8 @@ router.get("/sync", (req, res) => {
         .catch((err) => res.status(500).send("Error: " + err));
 });
 
+router.get("/error", (req, res) => {
+    throw new Error('error');
+});
+
 module.exports = router;
