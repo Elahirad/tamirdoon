@@ -29,7 +29,9 @@ services:
       DB_USERNAME: admin
       DB_PASSWORD: Admin1234
     volumes:
-      - ./backend:/usr/src/app
+      - ./backend/src:/usr/src/app/src
+      - ./backend/package.json:/usr/src/app/package.json
+      - ./backend/package-lock.json:/usr/src/app/package-lock.json
   frontend-service:
     build: ./frontend
     restart: always

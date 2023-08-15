@@ -3,8 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "./src/app.js",
+  "nodemonConfig": {
+    "legacyWatch": true,
+    "ignore": [
+      "package-lock.json",
+      "**/node_modules/**"
+    ],
+    "exec": "npm run start-watch"
+  },
   "scripts": {
-    "start": "nodemon --legacy-watch ./src/app.js"
+    "start": "nodemon",
+    "start-watch": "npm i && node ./src/app.js"
   },
   "author": "",
   "license": "ISC",
