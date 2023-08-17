@@ -13,7 +13,7 @@ module.exports = {
                 type: Sequelize.DataTypes.STRING
             },
             location : {
-                type: Sequelize.DataTypes.STRING
+                type: Sequelize.DataTypes.JSON
             },
             SuggestedPrice: {
                 type: Sequelize.DataTypes.STRING
