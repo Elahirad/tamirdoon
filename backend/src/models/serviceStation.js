@@ -5,7 +5,8 @@ const {Image} = require('./image');
 
 const ServiceStation = sequelize.define('ServiceStation', {
     name: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
     },
     location : {
         type: DataTypes.JSON,
@@ -22,6 +23,7 @@ const ServiceStation = sequelize.define('ServiceStation', {
     },
     phoneNumber: {
         type: DataTypes.STRING,
+        allowNull: false,
         validate: {
             isPhoneNumberFormat(value) {
                 const phoneNumberRegex = /^\d{11}$/;
@@ -33,7 +35,8 @@ const ServiceStation = sequelize.define('ServiceStation', {
         }
     },
     workingHoursDescription: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
     },
 }, {tableName: 'serviceStations'});
 
