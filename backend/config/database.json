@@ -3,7 +3,7 @@
     "username": "admin",
     "password": "Admin1234",
     "database": "tamirdoon",
-    "host": "tamirdoon-mysql_db-1",
+    "host": "localhost",
     "dialect": "mysql"
   }
 }
