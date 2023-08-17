@@ -7,7 +7,7 @@ const config = require('config');
 const Joi = require('joi');
 
 const User = sequelize.define('User', {
-        name: {
+        firstName: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
@@ -63,7 +63,7 @@ User.prototype.generateAuthToken = function () {
     return jwt.sign({
         id: this.id,
         email: this.email,
-        name: this.name,
+        firstName: this.firstName,
         lastName: this.lastName
     }, config.get('jwtPrivateKey'));
 }
@@ -85,7 +85,7 @@ User.beforeCreate(async (user) => {
 
 function userSignUpValidate(user) {
     const schema = Joi.object({
-        name: Joi.string().min(2).max(50).required(),
+        firstName: Joi.string().min(2).max(50).required(),
         lastName: Joi.string().min(2).max(50).required(),
         phoneNumber: Joi.string().pattern(/^\d{11}$/).required(),
         email: Joi.string().email().required(),
