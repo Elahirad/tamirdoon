@@ -57,7 +57,7 @@ const Serviceman = sequelize.define('Serviceman', {
         }
     },
     {
-        tableName: 'users',
+        tableName: 'servicemen',
     });
 
 Serviceman.prototype.generateAuthToken = function () {
