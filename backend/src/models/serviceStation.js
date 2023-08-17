@@ -20,6 +20,18 @@ const ServiceStation = sequelize.define('ServiceStation', {
             },
         }
     },
+    phoneNumber: {
+        type: DataTypes.STRING,
+        validate: {
+            isPhoneNumberFormat(value) {
+                const phoneNumberRegex = /^\d{11}$/;
+
+                if (!phoneNumberRegex.test(value)) {
+                    throw new Error('Invalid phone number format. Please use XXXX-XXX-XXXX.');
+                }
+            }
+        }
+    },
     workingHoursDescription: {
         type: DataTypes.STRING
     },
