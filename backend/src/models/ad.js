@@ -6,7 +6,8 @@ const {Image} = require('./image');
 
 const Ad = sequelize.define('Ad', {
     title: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
     },
     description: {
         type: DataTypes.STRING
@@ -28,7 +29,8 @@ const Ad = sequelize.define('Ad', {
         type: DataTypes.STRING
     },
     isClosed: {
-        type: DataTypes.BOOLEAN
+        type: DataTypes.BOOLEAN,
+        default: false
     }
 }, {tableName: 'ads'});
 
