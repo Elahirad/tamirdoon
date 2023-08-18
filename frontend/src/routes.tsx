@@ -8,12 +8,17 @@ import ServicemanSignupPage from "./pages/Servicemen/ServicemenSignupPage";
 import ServicemanHomePage from "./pages/Servicemen/ServicemenHomePage";
 import AdminHomePage from "./pages/Admin/AdminHomePage";
 import AdminSigninPage from "./pages/Admin/AdminSigninPage";
+import AdminLayout from "./components/Admin/AdminLayout";
 
 const router = createBrowserRouter([
   {
     path: "/admin",
     children: [
-      { index: true, element: <AdminHomePage /> },
+      {
+        path: "panel",
+        element: <AdminLayout />,
+        children: [{ index: true, element: <AdminHomePage /> }],
+      },
       {
         path: "signin",
         element: <AdminSigninPage />,
