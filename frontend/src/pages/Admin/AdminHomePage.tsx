@@ -7,7 +7,7 @@ const AdminHomePage = () => {
   useEffect(() => {
     // TODO: Should call API for checking user is logged in or note
     const isLoggedIn = false;
-    if (!isLoggedIn) navigate("/admin/signin?redirected=true");
+    if (!isLoggedIn) return navigate("/admin/signin?redirected=true");
   }, []);
   return <Text>صفحه اصلی ادمین</Text>;
 };

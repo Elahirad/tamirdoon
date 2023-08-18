@@ -1,19 +1,3 @@
-// import { Heading, Text } from "@chakra-ui/react";
-// import { useSearchParams } from "react-router-dom";
-
-// const AdminSigninPage = () => {
-//   const redirected = useSearchParams()[0].get("redirected");
-
-//   return (
-//     <>
-//       {redirected && <Heading>برای استفاده از پنل ادمین وارد شوید.</Heading>}
-//       <Text>صفحه ورود ادمین</Text>
-//     </>
-//   );
-// };
-
-// export default AdminSigninPage;
-
 import {
   Button,
   FormControl,
@@ -34,7 +18,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 
 const SigninSchema = Yup.object().shape({
-  username: Yup.string().required("ایمیل یا شماره موبایل را وارد کنید"),
+  username: Yup.string().required("نام کاربری را وارد کنید"),
   password: Yup.string().required("رمز عبور را وارد کنید"),
 });
 
@@ -69,7 +53,7 @@ const AdminSigninPage = () => {
   ) => {
     const { username, password, remember } = values;
     apiClient
-      .post("/users/sign-in", {
+      .post("/admin/sign-in", {
         username,
         password,
         remember,
