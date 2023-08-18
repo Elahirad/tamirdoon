@@ -10,10 +10,10 @@ import {
   Checkbox,
   Flex,
 } from "@chakra-ui/react";
-import FormContainer from "../components/FormContainer";
+import FormContainer from "../../components/FormContainer.js";
 import * as Yup from "yup";
 import { Field, Form, Formik, FormikHelpers } from "formik";
-import apiClient from "../services/apiClient.ts";
+import apiClient from "../../services/apiClient.js";
 import { Link } from "react-router-dom";
 
 const SigninSchema = Yup.object().shape({
@@ -27,7 +27,7 @@ interface FormValues {
   remember: boolean;
 }
 
-const SigninPage = () => {
+const ServicemanSigninPage = () => {
   const toast = useToast();
   const submitHandler = (
     values: FormValues,
@@ -35,7 +35,7 @@ const SigninPage = () => {
   ) => {
     const { username, password, remember } = values;
     apiClient
-      .post("/users/sign-in", {
+      .post("/servicemen/sign-in", {
         username,
         password,
         remember,
@@ -66,7 +66,15 @@ const SigninPage = () => {
   return (
     <FormContainer>
       <Heading textAlign="center">
-        ورود به{" "}
+        ورود{" "}
+        <Text
+          as="span"
+          bgGradient="linear(to-r, blue.500, green.300)"
+          bgClip="text"
+        >
+          سرویس دهندگان
+        </Text>{" "}
+        به{" "}
         <Text
           as="span"
           bgGradient="linear(to-r, red.400, pink.400)"
@@ -74,7 +82,7 @@ const SigninPage = () => {
         >
           تعمیردون
         </Text>{" "}
-        👋
+        👨‍🔧
       </Heading>
       <Formik
         initialValues={{
@@ -151,4 +159,4 @@ const SigninPage = () => {
   );
 };
 
-export default SigninPage;
+export default ServicemanSigninPage;
