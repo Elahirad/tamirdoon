@@ -6,8 +6,20 @@ import SigninPage from "./pages/SigninPage";
 import ServicemanSigninPage from "./pages/Servicemen/ServicemenSigninPage";
 import ServicemanSignupPage from "./pages/Servicemen/ServicemenSignupPage";
 import ServicemanHomePage from "./pages/Servicemen/ServicemenHomePage";
+import AdminHomePage from "./pages/Admin/AdminHomePage";
+import AdminSigninPage from "./pages/Admin/AdminSigninPage";
 
 const router = createBrowserRouter([
+  {
+    path: "/admin",
+    children: [
+      { index: true, element: <AdminHomePage /> },
+      {
+        path: "signin",
+        element: <AdminSigninPage />,
+      },
+    ],
+  },
   {
     path: "/",
     element: <Layout />,
