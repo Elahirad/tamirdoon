@@ -98,7 +98,7 @@ const Signup = () => {
   };
   return (
     <FormContainer>
-      <Heading>
+      <Heading textAlign="center">
         ثبت نام در{" "}
         <Text
           as="span"
