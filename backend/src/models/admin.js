@@ -65,3 +65,5 @@ Admin.beforeCreate(async (admin) => {
         throw new Error("Error creating client for admin");
     }
 });
+
+module.exports = { Admin };
