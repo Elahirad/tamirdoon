@@ -17,7 +17,7 @@ module.exports = {
                 type: Sequelize.DataTypes.STRING
             },
             workingHoursDescription: {
-                type: DataTypes.STRING,
+                type: Sequelize.DataTypes.STRING,
                 allowNull: false
             },
             createdAt: {
