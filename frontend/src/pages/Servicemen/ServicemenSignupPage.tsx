@@ -9,10 +9,10 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import FormContainer from "../components/FormContainer";
+import FormContainer from "../../components/FormContainer";
 import * as Yup from "yup";
 import { Field, Form, Formik, FormikHelpers } from "formik";
-import apiClient from "../services/apiClient.ts";
+import apiClient from "../../services/apiClient";
 import { Link } from "react-router-dom";
 
 const SignupSchema = Yup.object().shape({
@@ -52,7 +52,7 @@ interface FormValues {
   password_repeat: string;
 }
 
-const Signup = () => {
+const ServicemanSignupPage = () => {
   const toast = useToast();
   const submitHandler = (
     values: FormValues,
@@ -66,7 +66,7 @@ const Signup = () => {
       password,
     } = values;
     apiClient
-      .post("/users/sign-up", {
+      .post("/servicemen/sign-up", {
         firstName,
         lastName,
         email,
@@ -99,7 +99,15 @@ const Signup = () => {
   return (
     <FormContainer>
       <Heading textAlign="center">
-        ثبت نام در{" "}
+        ثبت نام به عنوان{" "}
+        <Text
+          as="span"
+          bgGradient="linear(to-r, blue.500, green.300)"
+          bgClip="text"
+        >
+          سرویس دهنده
+        </Text>{" "}
+        در{" "}
         <Text
           as="span"
           bgGradient="linear(to-r, red.400, pink.400)"
@@ -223,4 +231,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default ServicemanSignupPage;
