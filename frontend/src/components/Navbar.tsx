@@ -343,6 +343,6 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "پنل همکاران",
-    href: "/admin",
+    href: "/admin/panel",
   },
 ];
