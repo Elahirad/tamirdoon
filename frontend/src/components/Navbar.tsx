@@ -338,11 +338,11 @@ const NAV_ITEMS: Array<NavItem> = [
     ],
   },
   {
-    label: "تماس با ما",
+    label: "درباره ما",
     href: "#",
   },
   {
-    label: "درباره ما",
-    href: "#",
+    label: "پنل همکاران",
+    href: "/admin",
   },
 ];
