@@ -15,8 +15,10 @@ import {
   MenuDivider,
   MenuItem,
   Center,
+  IconButton,
+  Hide,
 } from "@chakra-ui/react";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { Link } from "react-router-dom";
 
 const SAMPLE_USER = {
@@ -24,7 +26,11 @@ const SAMPLE_USER = {
   picture: "https://avatars.dicebear.com/api/male/username.svg",
 };
 
-export default function AdminNavbar() {
+interface Props {
+  onOpen: () => void;
+}
+
+export default function AdminNavbar({ onOpen }: Props) {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
@@ -40,19 +46,27 @@ export default function AdminNavbar() {
         borderColor={useColorModeValue("gray.200", "gray.900")}
         align="center"
       >
+        <Hide above="md">
+          <IconButton
+            onClick={() => onOpen()}
+            icon={<HamburgerIcon w={5} h={5} />}
+            variant="ghost"
+            aria-label="Toggle Navigation"
+          />
+        </Hide>
         <Flex
           flex={{ base: 1 }}
           justify={{ base: "center", md: "start" }}
           align="center"
         >
-          <Link to="/">
+          <Link to="/admin/panel">
             <Heading
               margin={2}
               as="h1"
               fontSize={useBreakpointValue({
-                base: "3xl",
-                md: "4xl",
-                lg: "5xl",
+                base: "2xl",
+                md: "3xl",
+                lg: "4xl",
               })}
               bgGradient="linear(to-r, red.400, orange.400)"
               bgClip="text"
@@ -62,12 +76,7 @@ export default function AdminNavbar() {
           </Link>
         </Flex>
 
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify="flex-end"
-          direction="row"
-          spacing={6}
-        >
+        <Stack justify="flex-end" direction="row" spacing={6}>
           <Button onClick={() => toggleColorMode()}>
             {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           </Button>
