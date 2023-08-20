@@ -7,9 +7,9 @@ const Permission = sequelize.define('Permission', {
         type: DataTypes.STRING,
         allowNull: false
     }
-});
+}, {tableName: 'permissions'});
 
-Role.belongsToMany(Permission, { through: 'rolePermissions' });
-Permission.belongsToMany(Role, { through: 'rolePermissions' });
+Role.belongsToMany(Permission, { through: 'rolePermissions', foreignKey: 'roleId' });
+Permission.belongsToMany(Role, { through: 'rolePermissions', foreignKey: 'permissionId' });
 
 module.exports = Permission;

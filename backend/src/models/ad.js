@@ -2,6 +2,7 @@ const {DataTypes} = require("sequelize");
 const {sequelize} = require("../../config/db.js");
 const {User} = require('./user');
 const {Image} = require('./image');
+const Category = require('./category');
 
 
 const Ad = sequelize.define('Ad', {
@@ -34,10 +35,13 @@ const Ad = sequelize.define('Ad', {
     }
 }, {tableName: 'ads'});
 
-User.hasMany(Ad);
-Ad.belongsTo(User);
+User.hasMany(Ad, {foreignKey: 'userId'});
+Ad.belongsTo(User, {foreignKey: 'userId'});
 
-Ad.belongsToMany(Image, { through: 'adImages' });
-Image.belongsToMany(Ad, { through: 'adImages' });
+Ad.belongsToMany(Image, { through: 'adImages', foreignKey: 'adId' });
+Image.belongsToMany(Ad, { through: 'adImages', foreignKey: 'imageId' });
+
+Category.hasMany(Ad, {foreignKey: 'categoryId'});
+Ad.belongsTo(Category, {foreignKey: 'categoryId'});
 
 module.exports = Ad;

@@ -7,14 +7,15 @@ module.exports = {
                 autoIncrement: true,
             },
             suggestedPrice:{
-                type: Sequelize.DataTypes.INTEGER,
+                type: Sequelize.DataTypes.STRING,
+                default: 'adaptive',
                 allowNull: false
             },
             isAccepted:{
                 type: Sequelize.DataTypes.BOOLEAN,
                 default: false,
             },
-            AdID: {
+            adID: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
                     model: 'ads',
@@ -23,7 +24,7 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            ServicemanId: {
+            servicemanId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
                     model: 'servicemen',

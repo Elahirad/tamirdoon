@@ -1,21 +1,16 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('serviceStationsImages', {
-            id: {
-                type: Sequelize.DataTypes.INTEGER,
-                primaryKey: true,
-                autoIncrement: true,
-            },
-            ServiceStationId: {
+            serviceStationId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'ads',
+                    model: 'serviceStations',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            ImageId: {
+            imageId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
                     model: 'images',

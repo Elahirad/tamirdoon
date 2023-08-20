@@ -10,15 +10,25 @@ const Chat = sequelize.define('Chat', {
     isRead: {
         type: DataTypes.BOOLEAN,
         default: false,
+    },
+    from: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    to: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
     }
-});
+}, {tableName: 'chats'});
 
-Chat.belongsTo(Client, { as: 'from', foreignKey: 'from'});
-Client.hasOne(Chat, { as: 'from', foreignKey: 'from'})
-Chat.belongsTo(Client, { as: 'to', foreignKey: 'to'});
-Client.hasOne(Chat, { as: 'to', foreignKey: 'to'});
+Chat.belongsTo(Client, {as: 'sender', foreignKey: 'from'});
+Client.hasOne(Chat, {as: 'sender', foreignKey: 'from'})
 
-Client.belongsTo(Client, { as: 'replyTo', foreignKey: 'replyTo'});
+Chat.belongsTo(Client, {as: 'receiver', foreignKey: 'to'});
+Client.hasOne(Chat, {as: 'receiver', foreignKey: 'to'});
+
+Chat.hasMany(Chat, {foreignKey: 'replyTo'})
+Chat.belongsTo(Chat, {foreignKey: 'replyTo'});
 
 module.exports = Chat;
 

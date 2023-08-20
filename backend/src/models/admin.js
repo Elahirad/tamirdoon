@@ -51,11 +51,11 @@ const Admin = sequelize.define("Admin", {
     }
 );
 
-Image.hasOne(Admin);
-Admin.belongsTo(Image);
+Image.hasOne(Admin, {foreignKey: 'imageId'});
+Admin.belongsTo(Image, {foreignKey: 'imageId'});
 
-Client.hasOne(Admin);
-Admin.belongsTo(Client);
+Client.hasOne(Admin, {foreignKey: 'clientId'});
+Admin.belongsTo(Client, {foreignKey: 'clientId'});
 
 Admin.beforeCreate(async (admin) => {
     try {

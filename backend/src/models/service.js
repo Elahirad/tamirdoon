@@ -8,12 +8,12 @@ const Service = sequelize.define('Service', {
         type: DataTypes.STRING,
         allowNull: false
     }
-});
+}, { tableName: 'services' });
 
-Category.hasMany(Service);
-Service.belongsTo(Category);
+Category.hasMany(Service, {foreignKey: 'categoryId'});
+Service.belongsTo(Category, {foreignKey: 'categoryId'});
 
-Service.belongsToMany(Serviceman, { through: 'servicemanServices' });
-Serviceman.belongsToMany(Service, { through: 'servicemanServices' });
+Service.belongsToMany(Serviceman, { through: 'servicemanServices', foreignKey: 'serviceId'});
+Serviceman.belongsToMany(Service, { through: 'servicemanServices' , foreignKey: 'servicemanId'});
 
 module.exports = Service;

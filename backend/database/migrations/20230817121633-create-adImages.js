@@ -1,12 +1,7 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('adImages', {
-            id: {
-                type: Sequelize.DataTypes.INTEGER,
-                primaryKey: true,
-                autoIncrement: true,
-            },
-            AdId: {
+        await queryInterface.createTable('ad_images', {
+            adId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
                     model: 'ads',
@@ -15,7 +10,7 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            ImageId: {
+            imageId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
                     model: 'images',
@@ -37,6 +32,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('adImages');
+        await queryInterface.dropTable('ad_images');
     }
 }
