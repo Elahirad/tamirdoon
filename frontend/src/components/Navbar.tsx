@@ -23,7 +23,6 @@ import {
 	MenuDivider,
 	MenuItem,
 	MenuList,
-	useToast,
 } from '@chakra-ui/react';
 import {
 	HamburgerIcon,
@@ -37,6 +36,8 @@ import {Link} from 'react-router-dom';
 import {useEffect} from 'react';
 import apiClient from '../services/apiClient';
 import useUserStore from '../hooks/store/useUserStore';
+import useInfoToast from '../hooks/useInfoToast';
+import useErrorToast from '../hooks/useErrorToast';
 
 const SAMPLE_USER = {
 	username: 'نام کاربری',
@@ -48,7 +49,8 @@ export default function Navbar() {
 	const {colorMode, toggleColorMode} = useColorMode();
 	const {user, updateLogin} = useUserStore();
 
-	const toast = useToast();
+	const infoToast = useInfoToast();
+	const errorToast = useErrorToast();
 
 	useEffect(() => {
 		updateLogin();
@@ -59,25 +61,9 @@ export default function Navbar() {
 			.get('users/sign-out')
 			.then(() => {
 				updateLogin();
-				toast({
-					title: 'خروج موفق !',
-					description: 'با موفقیت از حساب کاربری خود خارج شدید.',
-					status: 'info',
-					duration: 4000,
-					isClosable: true,
-					position: 'top-left',
-				});
+				infoToast('خروج موفق !', 'با موفقیت از حساب کاربری خود خارج شدید.');
 			})
-			.catch(() =>
-				toast({
-					title: 'خطایی رخ داد.',
-					description: 'خطای نامشخصی رخ داد.',
-					status: 'error',
-					duration: 4000,
-					isClosable: true,
-					position: 'top-left',
-				})
-			);
+			.catch(() => errorToast('خطای نامشخصی رخ داد.'));
 	};
 
 	return (
