@@ -40,7 +40,7 @@ const ServiceStation = sequelize.define('ServiceStation', {
     },
 }, {tableName: 'serviceStations'});
 
-ServiceStation.belongsToMany(Image, { through: 'ServiceStationImages' });
-Image.belongsToMany(ServiceStation, { through: 'ServiceStationImages' });
+ServiceStation.belongsToMany(Image, { through: 'serviceStationImages', foreignKey: 'serviceStationId'});
+Image.belongsToMany(ServiceStation, { through: 'serviceStationImages', foreignKey: 'imageId' });
 
 module.exports = ServiceStation;

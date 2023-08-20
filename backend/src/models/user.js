@@ -66,13 +66,14 @@ User.prototype.generateAuthToken = function () {
 	);
 };
 
-Image.hasOne(User);
-User.belongsTo(Image);
+Image.hasOne(User, {foreignKey: 'imageId'});
+User.belongsTo(Image, {foreignKey: 'imageId'});
 
-Client.hasOne(User);
-User.belongsTo(Client);
+Client.hasOne(User, {foreignKey: 'clientId'});
+User.belongsTo(Client, {foreignKey: 'clientId'});
 
 User.beforeCreate(async (user) => {
+  
 	try {
 		const client = await Client.create();
 		user.ClientId = client.id;
