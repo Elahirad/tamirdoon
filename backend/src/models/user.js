@@ -84,7 +84,7 @@ User.beforeCreate(async (user) => {
 function userSignUpValidate(user) {
 	const schema = Joi.object({
 		firstName: Joi.string().min(2).max(50).required(),
-		lastName: Joi.string().min(2).max(50).required(),
+		lastName: Joi.string().min(2).max(50),
 		phoneNumber: Joi.string().pattern(/^\d{11}$/),
 		email: Joi.string().email().required(),
 		password: Joi.string()
