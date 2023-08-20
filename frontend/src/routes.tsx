@@ -6,14 +6,27 @@ import SigninPage from "./pages/SigninPage";
 import ServicemanSigninPage from "./pages/Servicemen/ServicemenSigninPage";
 import ServicemanSignupPage from "./pages/Servicemen/ServicemenSignupPage";
 import ServicemanHomePage from "./pages/Servicemen/ServicemenHomePage";
-import AdminHomePage from "./pages/Admin/AdminHomePage";
+import AdminPanelHomePage from "./pages/Admin/Panel/AdminPanelHomePage";
 import AdminSigninPage from "./pages/Admin/AdminSigninPage";
+import AdminLayout from "./components/Admin/AdminLayout";
+import AdminPanelUsersPage from "./pages/Admin/Panel/AdminPanelUsersPage";
+import AdminPanelAdsPage from "./pages/Admin/Panel/AdminPanelAdsPage";
+import AdminPanelServicemenPage from "./pages/Admin/Panel/AdminPanelServicemenPage";
 
 const router = createBrowserRouter([
   {
     path: "/admin",
     children: [
-      { index: true, element: <AdminHomePage /> },
+      {
+        path: "panel",
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <AdminPanelHomePage /> },
+          { path: "users", element: <AdminPanelUsersPage /> },
+          { path: "ads", element: <AdminPanelAdsPage /> },
+          { path: "servicemen", element: <AdminPanelServicemenPage /> },
+        ],
+      },
       {
         path: "signin",
         element: <AdminSigninPage />,

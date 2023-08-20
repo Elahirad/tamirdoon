@@ -1,3 +1,4 @@
 {
-  "jwtPrivateKey": "tamirdoon_jwtPrivateKey"
+  "jwtPrivateKey": "tamirdoon_jwtPrivateKey",
+  "GOOGLE_CLIENT_ID": "235966621376-febvbsti7cd4ho8kaqgce1a06qpbava6.apps.googleusercontent.com"
 }
