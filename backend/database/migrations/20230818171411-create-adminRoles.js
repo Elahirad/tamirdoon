@@ -1,12 +1,7 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('adminRoles', {
-            id: {
-                type: Sequelize.DataTypes.INTEGER,
-                primaryKey: true,
-                autoIncrement: true,
-            },
-            AdminId: {
+            adminId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
                     model: 'admins',
@@ -15,7 +10,7 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            RoleId: {
+            roleId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
                     model: 'roles',

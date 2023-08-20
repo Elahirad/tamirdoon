@@ -5,15 +5,19 @@ const {Serviceman} = require('./serviceman');
 
 const AdOffer = sequelize.define('AdOffer', {
     suggestedPrice: {
-        type: DataTypes.NUMBER
+        type: DataTypes.STRING,
+        default: 'adaptive'
     },
     isAccepted: {
         type: DataTypes.BOOLEAN,
         default: false
     }
-});
+}, { tableName: 'adOffers' });
 
-AdOffer.belongsTo(Ad, { foreignKey: 'AdId' });
-AdOffer.belongsTo(Serviceman, { foreignKey: 'ServicemanId' });
+AdOffer.belongsTo(Ad, { foreignKey: 'adId' });
+Ad.hasMany(AdOffer, { foreignKey: 'adId' })
+
+AdOffer.belongsTo(Serviceman, { foreignKey: 'servicemanId' });
+Serviceman.hasMany(AdOffer, { foreignKey: 'servicemanId' })
 
 module.exports = AdOffer;

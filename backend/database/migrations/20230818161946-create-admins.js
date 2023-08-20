@@ -46,7 +46,7 @@ module.exports = {
                 allowNull: false,
                 defaultValue: Sequelize.DataTypes.NOW,
             },
-            ImageId: {
+            imageId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
                     model: 'images',
@@ -55,7 +55,7 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            ClientId: {
+            clientId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
                     model: 'clients',

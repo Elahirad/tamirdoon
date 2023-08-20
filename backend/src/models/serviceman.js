@@ -69,20 +69,21 @@ Serviceman.prototype.generateAuthToken = function () {
     }, config.get('jwtPrivateKey'));
 }
 
-Image.hasOne(Serviceman);
-Serviceman.belongsTo(Image);
+Image.hasOne(Serviceman, {foreignKey: 'imageId'});
+Serviceman.belongsTo(Image, {foreignKey: 'imageId'});
 
-Client.hasOne(Serviceman);
-Serviceman.belongsTo(Client);
+Client.hasOne(Serviceman, {foreignKey: 'clientId'});
+Serviceman.belongsTo(Client, {foreignKey: 'clientId'});
 
-ServiceStation.hasMany(Serviceman);
-Serviceman.belongsTo(ServiceStation);
+ServiceStation.hasMany(Serviceman, {foreignKey: 'serviceStationId'});
+Serviceman.belongsTo(ServiceStation, {foreignKey: 'serviceStationId'});
+
 Serviceman.beforeCreate(async (user) => {
     try {
         const client = await Client.create();
         user.ClientId = client.id;
     } catch (error) {
-        throw new Error('Error creating client for user');
+        throw new Error('Error creating client for serviceman');
     }
 });
 

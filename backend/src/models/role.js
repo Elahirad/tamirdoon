@@ -7,9 +7,9 @@ const Role = sequelize.define('Role', {
         type: DataTypes.STRING,
         allowNull: false
     }
-});
+}, { tableName: 'roles' });
 
-Role.belongsToMany(Admin, { through: 'adminRoles' });
-Admin.belongsToMany(Role, { through: 'adminRoles' });
+Role.belongsToMany(Admin, { through: 'adminRoles', foreignKey: 'roleId' });
+Admin.belongsToMany(Role, { through: 'adminRoles', foreignKey : 'adminId' });
 
 module.exports = Role;
