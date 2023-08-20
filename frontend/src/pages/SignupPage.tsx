@@ -13,8 +13,9 @@ import FormContainer from '../components/FormContainer';
 import * as Yup from 'yup';
 import {Field, Form, Formik, FormikHelpers} from 'formik';
 import apiClient from '../services/apiClient.ts';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import _ from 'lodash';
+import useUserStore from '../hooks/store/useUserStore.ts';
 
 const SignupSchema = Yup.object().shape({
 	firstName: Yup.string()
@@ -51,6 +52,8 @@ interface FormValues {
 }
 
 const Signup = () => {
+	const navigate = useNavigate();
+	const updateLogin = useUserStore((store) => store.updateLogin);
 	const toast = useToast();
 	const submitHandler = (
 		values: FormValues,
@@ -78,8 +81,10 @@ const Signup = () => {
 					isClosable: true,
 					position: 'top-left',
 				});
+				navigate('/');
+				updateLogin();
 			})
-			.catch((err) => {
+			.catch(() => {
 				toast({
 					title: 'خطایی رخ داد.',
 					description: 'خطای نامشخصی رخ داد.',
@@ -88,7 +93,6 @@ const Signup = () => {
 					isClosable: true,
 					position: 'top-left',
 				});
-				console.log(err);
 			});
 	};
 	return (
