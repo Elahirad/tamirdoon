@@ -6,7 +6,6 @@ import {
 	Input,
 	VStack,
 	Text,
-	useToast,
 	Checkbox,
 	Flex,
 	Box,
@@ -18,6 +17,8 @@ import apiClient from '../services/apiClient.ts';
 import {Link, useNavigate} from 'react-router-dom';
 import {CredentialResponse, GoogleLogin} from '@react-oauth/google';
 import useUserStore from '../hooks/store/useUserStore.ts';
+import useSuccessToast from '../hooks/useSuccessToast.ts';
+import useErrorToast from '../hooks/useErrorToast.ts';
 
 const SigninSchema = Yup.object().shape({
 	username: Yup.string().required('ایمیل یا شماره موبایل را وارد کنید'),
@@ -40,7 +41,8 @@ interface OAuthCallbackResponse {
 const SigninPage = () => {
 	const updateLogin = useUserStore((store) => store.updateLogin);
 	const navigate = useNavigate();
-	const toast = useToast();
+	const errorToast = useErrorToast();
+	const successToast = useSuccessToast();
 	const submitHandler = (
 		values: FormValues,
 		actions: FormikHelpers<FormValues>
@@ -54,26 +56,15 @@ const SigninPage = () => {
 			})
 			.then(() => {
 				actions.resetForm();
-				toast({
-					title: 'ورود موفقیت آمیز!',
-					description: 'با موفقیت به حساب کاربری خود وارد شدید',
-					status: 'success',
-					duration: 4000,
-					isClosable: true,
-					position: 'top-left',
-				});
+				successToast(
+					'ورود موفقیت آمیز!',
+					'با موفقیت به حساب کاربری خود وارد شدید'
+				);
 				navigate('/');
 				updateLogin();
 			})
 			.catch(() => {
-				toast({
-					title: 'خطایی رخ داد.',
-					description: 'خطای نامشخصی رخ داد.',
-					status: 'error',
-					duration: 4000,
-					isClosable: true,
-					position: 'top-left',
-				});
+				errorToast('خطای نامشخصی رخ داد.');
 			});
 	};
 
@@ -83,38 +74,20 @@ const SigninPage = () => {
 				credential: response.credential,
 			})
 			.then((res) => {
-				toast({
-					title: 'ورود موفقیت آمیز!',
-					description: `${res.data.firstName} عزیز با موفقیت به حساب کاربری خود وارد شدید`,
-					status: 'success',
-					duration: 4000,
-					isClosable: true,
-					position: 'top-left',
-				});
+				successToast(
+					'ورود موفقیت آمیز!',
+					'با موفقیت به حساب کاربری خود وارد شدید'
+				);
 				navigate('/');
 				updateLogin();
 			})
 			.catch(() => {
-				toast({
-					title: 'خطایی رخ داد.',
-					description: 'خطای نامشخصی رخ داد.',
-					status: 'error',
-					duration: 4000,
-					isClosable: true,
-					position: 'top-left',
-				});
+				errorToast('خطای نامشخصی رخ داد.');
 			});
 	};
 
 	const errorHandler = () => {
-		toast({
-			title: 'خطایی رخ داد.',
-			description: 'خطای نامشخصی رخ داد.',
-			status: 'error',
-			duration: 4000,
-			isClosable: true,
-			position: 'top-left',
-		});
+		errorToast('خطای نامشخصی رخ داد.');
 	};
 
 	return (

@@ -6,7 +6,6 @@ import {
 	HStack,
 	Input,
 	Text,
-	useToast,
 	VStack,
 } from '@chakra-ui/react';
 import FormContainer from '../components/FormContainer';
@@ -16,6 +15,8 @@ import apiClient from '../services/apiClient.ts';
 import {Link, useNavigate} from 'react-router-dom';
 import _ from 'lodash';
 import useUserStore from '../hooks/store/useUserStore.ts';
+import useErrorToast from '../hooks/useErrorToast.ts';
+import useSuccessToast from '../hooks/useSuccessToast.ts';
 
 const SignupSchema = Yup.object().shape({
 	firstName: Yup.string()
@@ -54,7 +55,8 @@ interface FormValues {
 const Signup = () => {
 	const navigate = useNavigate();
 	const updateLogin = useUserStore((store) => store.updateLogin);
-	const toast = useToast();
+	const errorToast = useErrorToast();
+	const successToast = useSuccessToast();
 	const submitHandler = (
 		values: FormValues,
 		actions: FormikHelpers<FormValues>
@@ -73,26 +75,12 @@ const Signup = () => {
 			})
 			.then(() => {
 				actions.resetForm();
-				toast({
-					title: 'حساب ساخته شد.',
-					description: 'حساب کاربری شما با موفقیت ساخته شد',
-					status: 'success',
-					duration: 4000,
-					isClosable: true,
-					position: 'top-left',
-				});
+				successToast('حساب ساخته شد !', 'حساب کاربری شما با موفقیت ساخته شد');
 				navigate('/');
 				updateLogin();
 			})
 			.catch(() => {
-				toast({
-					title: 'خطایی رخ داد.',
-					description: 'خطای نامشخصی رخ داد.',
-					status: 'error',
-					duration: 4000,
-					isClosable: true,
-					position: 'top-left',
-				});
+				errorToast('خطای نامشخصی رخ داد.');
 			});
 	};
 	return (
