@@ -9,12 +9,14 @@ import {
   useToast,
   Checkbox,
   Flex,
+  Box,
 } from "@chakra-ui/react";
 import FormContainer from "../components/FormContainer";
 import * as Yup from "yup";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import apiClient from "../services/apiClient.ts";
 import { Link } from "react-router-dom";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 const SigninSchema = Yup.object().shape({
   username: Yup.string().required("ایمیل یا شماره موبایل را وارد کنید"),
@@ -63,6 +65,15 @@ const SigninPage = () => {
         console.log(err);
       });
   };
+
+  const successHandler = (response: CredentialResponse) => {
+    console.log(response);
+  };
+
+  const errorHandler = () => {
+    console.log("Error");
+  };
+
   return (
     <FormContainer>
       <Heading textAlign="center">
@@ -139,6 +150,9 @@ const SigninPage = () => {
           </VStack>
         )}
       </Formik>
+      <Box mt={3}>
+        <GoogleLogin onSuccess={successHandler} onError={errorHandler} />
+      </Box>
       <Text mt={5}>
         حساب کاربری ندارید ؟{" "}
         <Link to="/signup">
