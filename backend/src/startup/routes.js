@@ -7,6 +7,7 @@ const error = require('../middlewares/error');
 const helmet = require('helmet');
 const cors = require('cors');
 const corsConfig = require('../../config/cors-config');
+
 module.exports = function (app) {
 	app.use(helmet());
 	app.use(cors(corsConfig));

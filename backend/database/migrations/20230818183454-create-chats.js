@@ -1,19 +1,36 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('serviceStationsImages', {
-            serviceStationId: {
+        await queryInterface.createTable('chats', {
+            message:{
+                type: Sequelize.DataTypes.STRING,
+                allowNull: false
+            },
+            isRead:{
+                type: Sequelize.DataTypes.BOOLEAN,
+                default: false,
+            },
+            to: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'serviceStations',
+                    model: 'clients',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            imageId: {
+            from: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'images',
+                    model: 'clients',
+                    key: 'id',
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE',
+            },
+            replyTo: {
+                type: Sequelize.DataTypes.INTEGER,
+                references: {
+                    model: 'chats',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
@@ -32,6 +49,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('serviceStationsImages');
+        await queryInterface.dropTable('chats');
     }
 }

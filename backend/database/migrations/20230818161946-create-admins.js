@@ -1,6 +1,6 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('servicemen', {
+        await queryInterface.createTable('admins', {
             id: {
                 type: Sequelize.DataTypes.INTEGER,
                 primaryKey: true,
@@ -36,14 +36,6 @@ module.exports = {
                 type: Sequelize.DataTypes.STRING,
                 allowNull: false
             },
-            emailIsVerified: {
-                type: Sequelize.DataTypes.BOOLEAN,
-                defaultValue: false
-            },
-            phoneNumberIsVerified: {
-                type: Sequelize.DataTypes.BOOLEAN,
-                defaultValue: false
-            },
             createdAt: {
                 type: Sequelize.DataTypes.DATE,
                 allowNull: false,
@@ -71,19 +63,10 @@ module.exports = {
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
-            },
-            serviceStationId: {
-                type: Sequelize.DataTypes.INTEGER,
-                references: {
-                    model: 'serviceStations',
-                    key: 'id',
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE',
             }
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('servicemen');
+        await queryInterface.dropTable('admins');
     }
 }

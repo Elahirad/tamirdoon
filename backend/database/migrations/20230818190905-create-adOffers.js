@@ -1,19 +1,33 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('serviceStationsImages', {
-            serviceStationId: {
+        await queryInterface.createTable('adOffers', {
+            id: {
+                type: Sequelize.DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
+            suggestedPrice:{
+                type: Sequelize.DataTypes.STRING,
+                default: 'adaptive',
+                allowNull: false
+            },
+            isAccepted:{
+                type: Sequelize.DataTypes.BOOLEAN,
+                default: false,
+            },
+            adID: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'serviceStations',
+                    model: 'ads',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            imageId: {
+            servicemanId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'images',
+                    model: 'servicemen',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
@@ -32,6 +46,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('serviceStationsImages');
+        await queryInterface.dropTable('adOffers');
     }
 }

@@ -1,19 +1,19 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('serviceStationsImages', {
-            serviceStationId: {
+        await queryInterface.createTable('rolePermissions', {
+            roleId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'serviceStations',
+                    model: 'roles',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            imageId: {
+            permissionId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'images',
+                    model: 'permissions',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
@@ -32,6 +32,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('serviceStationsImages');
+        await queryInterface.dropTable('rolePermissions');
     }
 }
