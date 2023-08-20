@@ -34,45 +34,50 @@ import {
 	SunIcon,
 } from '@chakra-ui/icons';
 import {Link} from 'react-router-dom';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import apiClient from '../services/apiClient';
+import useUserStore from '../hooks/store/useUserStore';
 
 const SAMPLE_USER = {
 	username: 'نام کاربری',
 	picture: 'https://avatars.dicebear.com/api/male/username.svg',
 };
 
-interface User {
-	id: number;
-	firstName: string;
-	lastName: string;
-	email: string;
-}
-
 export default function Navbar() {
 	const {isOpen, onToggle} = useDisclosure();
 	const {colorMode, toggleColorMode} = useColorMode();
-	const [user, setUser] = useState<User | null>(null);
+	const {user, updateLogin} = useUserStore();
 
 	const toast = useToast();
 
 	useEffect(() => {
-		apiClient.get('users/current-user').then((res) => {
-			if (res.status === 200) setUser(res.data);
-			else setUser(null);
-		});
+		updateLogin();
 	}, []);
 
 	const logoutHandler = () => {
-		apiClient.get('users/sign-out');
-		toast({
-			title: 'خروج موفق !',
-			description: 'با موفقیت از حساب کاربری خود خارج شدید.',
-			status: 'info',
-			duration: 4000,
-			isClosable: true,
-			position: 'top-left',
-		});
+		apiClient
+			.get('users/sign-out')
+			.then(() => {
+				updateLogin();
+				toast({
+					title: 'خروج موفق !',
+					description: 'با موفقیت از حساب کاربری خود خارج شدید.',
+					status: 'info',
+					duration: 4000,
+					isClosable: true,
+					position: 'top-left',
+				});
+			})
+			.catch(() =>
+				toast({
+					title: 'خطایی رخ داد.',
+					description: 'خطای نامشخصی رخ داد.',
+					status: 'error',
+					duration: 4000,
+					isClosable: true,
+					position: 'top-left',
+				})
+			);
 	};
 
 	return (
@@ -152,7 +157,7 @@ export default function Navbar() {
 								</Center>
 								<br />
 								<Center>
-									<Text>{`${user.firstName} ${user.lastName || ''}`}</Text>
+									<Text>{`${user?.firstName} ${user?.lastName || ''}`}</Text>
 								</Center>
 								<br />
 								<MenuDivider />

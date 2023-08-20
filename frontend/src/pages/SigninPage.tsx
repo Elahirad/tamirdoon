@@ -17,6 +17,7 @@ import {Field, Form, Formik, FormikHelpers} from 'formik';
 import apiClient from '../services/apiClient.ts';
 import {Link, useNavigate} from 'react-router-dom';
 import {CredentialResponse, GoogleLogin} from '@react-oauth/google';
+import useUserStore from '../hooks/store/useUserStore.ts';
 
 const SigninSchema = Yup.object().shape({
 	username: Yup.string().required('ایمیل یا شماره موبایل را وارد کنید'),
@@ -37,6 +38,7 @@ interface OAuthCallbackResponse {
 }
 
 const SigninPage = () => {
+	const updateLogin = useUserStore((store) => store.updateLogin);
 	const navigate = useNavigate();
 	const toast = useToast();
 	const submitHandler = (
@@ -60,8 +62,10 @@ const SigninPage = () => {
 					isClosable: true,
 					position: 'top-left',
 				});
+				navigate('/');
+				updateLogin();
 			})
-			.catch((err) => {
+			.catch(() => {
 				toast({
 					title: 'خطایی رخ داد.',
 					description: 'خطای نامشخصی رخ داد.',
@@ -70,7 +74,6 @@ const SigninPage = () => {
 					isClosable: true,
 					position: 'top-left',
 				});
-				console.log(err);
 			});
 	};
 
@@ -89,8 +92,9 @@ const SigninPage = () => {
 					position: 'top-left',
 				});
 				navigate('/');
+				updateLogin();
 			})
-			.catch((err) => {
+			.catch(() => {
 				toast({
 					title: 'خطایی رخ داد.',
 					description: 'خطای نامشخصی رخ داد.',
@@ -99,12 +103,18 @@ const SigninPage = () => {
 					isClosable: true,
 					position: 'top-left',
 				});
-				console.log(err);
 			});
 	};
 
 	const errorHandler = () => {
-		console.log('Error');
+		toast({
+			title: 'خطایی رخ داد.',
+			description: 'خطای نامشخصی رخ داد.',
+			status: 'error',
+			duration: 4000,
+			isClosable: true,
+			position: 'top-left',
+		});
 	};
 
 	return (
