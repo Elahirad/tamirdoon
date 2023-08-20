@@ -81,8 +81,19 @@ router.post('/sign-in', async (req, res) => {
 	);
 });
 
-router.get('/is-logged-in', auth, (req, res) => {
+router.get('/sign-out', auth, (req, res) => {
+	res.cookie(
+		'x-auth-token',
+		{},
+		{
+			maxAge: -1,
+		}
+	);
 	res.sendStatus(200);
+});
+
+router.get('/current-user', auth, (req, res) => {
+	res.send(req.user);
 });
 
 module.exports = router;
