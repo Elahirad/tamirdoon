@@ -13,10 +13,10 @@ const Comment = sequelize.define('Comment', {
         allowNull: false
     },
     positivePoints: {
-        type: DataTypes.ARRAY(DataTypes.STRING)
+        type: DataTypes.STRING
     },
     negativePoints: {
-        type: DataTypes.ARRAY(DataTypes.STRING)
+        type: DataTypes.STRING,
     },
     isAccepted: {
         type: DataTypes.BOOLEAN
@@ -24,7 +24,7 @@ const Comment = sequelize.define('Comment', {
     isRecommended: {
         type: DataTypes.BOOLEAN
     }
-});
+}, { tableName: 'comments'});
 
 Customer.hasMany(Comment, { foreignKey: 'customerId' });
 Comment.belongsTo(Customer, { foreignKey: 'customerId' });
