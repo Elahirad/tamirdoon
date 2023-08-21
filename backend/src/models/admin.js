@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 const {sequelize} = require("../../config/db.js");
 const {Image} = require("./image");
-const Client = require("./client");
+const User = require("./user");
 
 const Admin = sequelize.define("Admin", {
         firstName: {
@@ -54,15 +54,15 @@ const Admin = sequelize.define("Admin", {
 Image.hasOne(Admin, {foreignKey: 'imageId'});
 Admin.belongsTo(Image, {foreignKey: 'imageId'});
 
-Client.hasOne(Admin, {foreignKey: 'clientId'});
-Admin.belongsTo(Client, {foreignKey: 'clientId'});
+User.hasOne(Admin, {foreignKey: 'userId'});
+Admin.belongsTo(User, {foreignKey: 'userId'});
 
 Admin.beforeCreate(async (admin) => {
     try {
         const client = await Client.create();
         admin.ClientId = client.id;
     } catch (error) {
-        throw new Error("Error creating client for admin");
+        throw new Error("Error creating user for admin");
     }
 });
 

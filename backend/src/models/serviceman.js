@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 const {sequelize} = require("../../config/db.js");
 const {Image} = require('./image');
-const Client = require('./client');
+const User = require('./user');
 const ServiceStation = require('serviceStation');
 const jwt = require('jsonwebtoken');
 const config = require('config');
@@ -72,8 +72,8 @@ Serviceman.prototype.generateAuthToken = function () {
 Image.hasOne(Serviceman, {foreignKey: 'imageId'});
 Serviceman.belongsTo(Image, {foreignKey: 'imageId'});
 
-Client.hasOne(Serviceman, {foreignKey: 'clientId'});
-Serviceman.belongsTo(Client, {foreignKey: 'clientId'});
+User.hasOne(Serviceman, {foreignKey: 'userId'});
+Serviceman.belongsTo(User, {foreignKey: 'userId'});
 
 ServiceStation.hasMany(Serviceman, {foreignKey: 'serviceStationId'});
 Serviceman.belongsTo(ServiceStation, {foreignKey: 'serviceStationId'});
@@ -83,7 +83,7 @@ Serviceman.beforeCreate(async (user) => {
         const client = await Client.create();
         user.ClientId = client.id;
     } catch (error) {
-        throw new Error('Error creating client for serviceman');
+        throw new Error('Error creating user for serviceman');
     }
 });
 
