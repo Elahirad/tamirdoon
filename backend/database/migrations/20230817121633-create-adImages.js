@@ -1,6 +1,6 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('ad_images', {
+        await queryInterface.createTable('adImages', {
             adId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
@@ -32,6 +32,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('ad_images');
+        await queryInterface.dropTable('adImages');
     }
 }
