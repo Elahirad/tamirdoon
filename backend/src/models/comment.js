@@ -18,8 +18,9 @@ const Comment = sequelize.define('Comment', {
     negativePoints: {
         type: DataTypes.STRING,
     },
-    isAccepted: {
-        type: DataTypes.BOOLEAN
+    status: {
+        type: DataTypes.ENUM('pending', 'accepted', 'rejected'),
+        default: 'pending'
     },
     isRecommended: {
         type: DataTypes.BOOLEAN
