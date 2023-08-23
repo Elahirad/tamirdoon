@@ -14,9 +14,8 @@ module.exports = function (app) {
 	app.use(express.json());
 	app.use(cookieParser());
 	app.use('/api/test', test);
-	app.use('/api/customers', customer);
+	app.use('/api/customers', customers);
 	app.use('/api/oauth', oauth);
-	app;
 	// another routes
 	app.use(error);
 };
