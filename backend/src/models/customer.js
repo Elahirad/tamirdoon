@@ -62,8 +62,8 @@ const Customer = sequelize.define("Customer", {
     }
 );
 
-Customer.prototype.generateAuthToken = function () {
-    return jwt.sign(
+Customer.prototype.generateAuthToken = function (req, res) {
+    const token =  jwt.sign(
         {
             id: this.id,
             email: this.email,
@@ -72,6 +72,15 @@ Customer.prototype.generateAuthToken = function () {
         },
         config.get("jwtPrivateKey")
     );
+
+    let maxAge = 24 * 60 * 60 * 1000;
+    if(req.body.remember) maxAge = 7 * maxAge;
+    res.cookie("x-auth-token", token, {
+        maxAge: maxAge,
+        httpOnly: true,
+        sameSite: "strict",
+        secure: true,
+    });
 };
 
 Image.hasOne(Customer, {foreignKey: 'imageId'});
@@ -82,8 +91,8 @@ Customer.belongsTo(User, {foreignKey: 'userId'});
 
 Customer.beforeCreate(async (customer) => {
     try {
-        const client = await Client.create();
-        customer.ClientId = client.id;
+        const user = await User.create();
+        customer.UserId = user.id;
     } catch (error) {
         throw new Error("Error creating user for customer");
     }
