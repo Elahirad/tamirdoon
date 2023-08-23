@@ -1,6 +1,11 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('chats', {
+            id: {
+                type: Sequelize.DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
             message:{
                 type: Sequelize.DataTypes.STRING,
                 allowNull: false
@@ -27,15 +32,6 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            replyTo: {
-                type: Sequelize.DataTypes.INTEGER,
-                references: {
-                    model: 'chats',
-                    key: 'id',
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE',
-            },
             createdAt: {
                 type: Sequelize.DataTypes.DATE,
                 allowNull: false,
@@ -46,6 +42,15 @@ module.exports = {
                 allowNull: false,
                 defaultValue: Sequelize.DataTypes.NOW,
             }
+        });
+        await queryInterface.addColumn('chats', 'replyTo', {
+            type: Sequelize.DataTypes.INTEGER,
+            references: {
+                model: 'chats',
+                key: 'id',
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
         });
     },
     down: async (queryInterface, Sequelize) => {

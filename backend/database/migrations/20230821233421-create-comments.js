@@ -1,6 +1,11 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('comments', {
+            id: {
+                type: Sequelize.DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
             title:{
                 type: Sequelize.DataTypes.STRING,
                 allowNull: false
@@ -10,10 +15,10 @@ module.exports = {
                 allowNull: false
             },
             positivePoints:{
-                types: Sequelize.DataTypes.STRING
+                type: Sequelize.DataTypes.STRING
             },
             negativePoints:{
-                types: Sequelize.DataTypes.STRING
+                type: Sequelize.DataTypes.STRING
             },
             status: {
                 type: Sequelize.DataTypes.ENUM('pending', 'accepted', 'rejected'),
