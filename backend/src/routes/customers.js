@@ -36,13 +36,6 @@ router.post("/sign-up", async (req, res) => {
 
     await customer.save();
 
-    const token = customer.generateAuthToken();
-    res.cookie("x-auth-token", token, {
-        maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        sameSite: "strict",
-        secure: true,
-    });
     res.send(_.pick(customer, ["id", "firstName", "lastName", "email", "phoneNumber"]));
 });
 
@@ -59,25 +52,27 @@ router.post("/sign-in", async (req, res) => {
         },
     });
 
-    // TODO: Generating token with remember or not
-
     if (!customer) return res.status(400).send("Invalid email or password.");
 
     const validPassword = await bcrypt.compare(req.body.password, customer.password);
     if (!validPassword) return res.status(400).send("Invalid email or password.");
 
-    const token = customer.generateAuthToken();
-    res.cookie("x-auth-token", token, {
-        maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        sameSite: "strict",
-        secure: true,
-    });
+    customer.generateAuthToken(req, res);
+
     res.send(_.pick(customer, ["id", "firstName", "lastName", "email", "phoneNumber"]));
 });
 
-router.get("/is-logged-in", auth, (req, res) => {
+router.get('/sign-out', auth, (req, res) => {
+    res.cookie(
+        'x-auth-token',
+        {},
+        { maxAge: -1 }
+    );
     res.sendStatus(200);
+});
+
+router.get('/current-user', auth, (req, res) => {
+    res.send(req.user);
 });
 
 module.exports = router;
