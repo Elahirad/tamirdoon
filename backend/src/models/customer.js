@@ -24,17 +24,6 @@ const Customer = sequelize.define("Customer", {
         },
         phoneNumber: {
             type: DataTypes.STRING,
-            validate: {
-                isPhoneNumberFormat(value) {
-                    const phoneNumberRegex = /^\d{11}$/;
-
-                    if (!phoneNumberRegex.test(value)) {
-                        throw new Error(
-                            "Invalid phone number format. Please use XXXX-XXX-XXXX."
-                        );
-                    }
-                },
-            },
         },
         email: {
             type: DataTypes.STRING,
@@ -101,16 +90,11 @@ Customer.beforeCreate(async (customer) => {
 function customerSignUpValidate(customer) {
     const schema = Joi.object({
         firstName: Joi.string().min(2).max(50).required(),
-        lastName: Joi.string().min(2).max(50).required(),
-        phoneNumber: Joi.string()
-            .pattern(/^\d{11}$/)
-            .required(),
+        lastName: Joi.string().min(2).max(50),
+        phoneNumber: Joi.string().pattern(/^\d{11}$/),
         email: Joi.string().email().required(),
         password: Joi.string()
-            .pattern(
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/
-            )
-            .required(),
+            .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/).required(),
     });
     return schema.validate(customer);
 }

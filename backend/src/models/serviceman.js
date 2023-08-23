@@ -24,16 +24,7 @@ const Serviceman = sequelize.define('Serviceman', {
             }
         },
         phoneNumber: {
-            type: DataTypes.STRING,
-            validate: {
-                isPhoneNumberFormat(value) {
-                    const phoneNumberRegex = /^\d{11}$/;
-
-                    if (!phoneNumberRegex.test(value)) {
-                        throw new Error('Invalid phone number format. Please use XXXX-XXX-XXXX.');
-                    }
-                }
-            }
+            type: DataTypes.STRING
         },
         email: {
             type: DataTypes.STRING,
@@ -90,8 +81,8 @@ Serviceman.beforeCreate(async (user) => {
 function servicemanSignUpValidate(serviceman) {
     const schema = Joi.object({
         name: Joi.string().min(2).max(50).required(),
-        lastName: Joi.string().min(2).max(50).required(),
-        phoneNumber: Joi.string().pattern(/^\d{11}$/).required(),
+        lastName: Joi.string().min(2).max(50),
+        phoneNumber: Joi.string().pattern(/^\d{11}$/),
         email: Joi.string().email().required(),
         password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/).required()
     })
