@@ -2,6 +2,7 @@ const {DataTypes} = require("sequelize");
 const {sequelize} = require("../../config/db.js");
 const {Image} = require("./image");
 const User = require("./user");
+const Joi = require("joi");
 
 const Admin = sequelize.define("Admin", {
         firstName: {
@@ -66,4 +67,15 @@ Admin.beforeCreate(async (admin) => {
     }
 });
 
-module.exports = { Admin };
+function adminCreateValidate(customer) {
+    const schema = Joi.object({
+        firstName: Joi.string().min(2).max(50).required(),
+        lastName: Joi.string().min(2).max(50).required(),
+        phoneNumber: Joi.string().pattern(/^\d{11}$/).required(),
+        email: Joi.string().email().required(),
+        password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/).required(),
+    });
+    return schema.validate(customer);
+}
+
+module.exports = { Admin, adminCreateValidate };
