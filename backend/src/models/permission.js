@@ -1,6 +1,7 @@
 const {sequelize} = require("../../config/db");
 const {DataTypes} = require("sequelize");
 const Role = require('./role');
+const Joi = require("joi");
 
 const Permission = sequelize.define('Permission', {
     name: {
@@ -12,4 +13,11 @@ const Permission = sequelize.define('Permission', {
 Role.belongsToMany(Permission, { through: 'rolePermissions', foreignKey: 'roleId' });
 Permission.belongsToMany(Role, { through: 'rolePermissions', foreignKey: 'permissionId' });
 
-module.exports = Permission;
+function permissionCreateValidate(permission) {
+    const schema = Joi.object({
+        name: Joi.string().required(),
+    });
+    return schema.validate(permission);
+}
+
+module.exports = {Permission, permissionCreateValidate};
