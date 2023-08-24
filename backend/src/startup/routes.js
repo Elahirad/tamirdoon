@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const test = require('../routes/test');
 const customers = require('../routes/customers');
 const permissions = require('../routes/permissions');
+const roles = require('../routes/roles');
 const oauth = require('../routes/oauth');
 const error = require('../middlewares/error');
 const helmet = require('helmet');
@@ -18,6 +19,7 @@ module.exports = function (app) {
 	app.use('/api/customers', customers);
 	app.use('/api/oauth', oauth);
     app.use('/api/permissions', permissions);
+    app.use('/api/roles', roles);
 	// other routes
 	app.use(error);
 };
