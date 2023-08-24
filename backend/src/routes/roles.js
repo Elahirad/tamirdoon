@@ -13,7 +13,7 @@ router.post('/create', async (req, res) => { // needs middleware to do this
     let role = await Role.findOne({
         where: { name: req.body.name}
     });
-    if (!role) return res.status(400).send("Role already exists.");
+    if (role) return res.status(400).send("Role already exists.");
 
     role = await Role.create({name: req.body.name});
     res.send(role);

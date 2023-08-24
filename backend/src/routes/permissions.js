@@ -13,7 +13,7 @@ router.post('/create', async (req, res) => { // needs middleware to do this
     let permission = await Permission.findOne({
         where: { name: req.body.name}
     });
-    if (!permission) return res.status(400).send("Permission already exists.");
+    if (permission) return res.status(400).send("Permission already exists.");
 
     permission = await Permission.create({name: req.body.name});
     res.send(permission);
