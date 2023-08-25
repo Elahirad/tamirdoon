@@ -31,6 +31,27 @@ module.exports = {
                 defaultValue: Sequelize.DataTypes.NOW,
             }
         });
+
+        await queryInterface.bulkInsert('permissions', [
+            {
+                name: 'مشاهده مراکز خدمات',
+                code: 'SERVICESTATION_READ',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'ویرایش مراکز خدمات',
+                code: 'SERVICESTATION_UPDATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'حذف مراکز خدمات',
+                code: 'SERVICESTATION_DELETE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        ]);
     },
     async down (queryInterface, Sequelize) {
         await queryInterface.dropTable('serviceStations');

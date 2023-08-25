@@ -56,6 +56,27 @@ module.exports = {
                 defaultValue: Sequelize.DataTypes.NOW,
             }
         });
+
+        await queryInterface.bulkInsert('permissions', [
+            {
+                name: 'مشاهده نظرات',
+                code: 'COMMENT_READ',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'ویرایش نظرات',
+                code: 'COMMENT_UPDATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'حذف نظرات',
+                code: 'COMMENT_DELETE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        ]);
     },
     down: async (queryInterface, Sequelize) => {
         await queryInterface.dropTable('comments');

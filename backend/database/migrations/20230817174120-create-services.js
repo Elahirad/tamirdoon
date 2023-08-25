@@ -29,6 +29,27 @@ module.exports = {
                 defaultValue: Sequelize.DataTypes.NOW,
             }
         });
+
+        await queryInterface.bulkInsert('permissions', [
+            {
+                name: 'مشاهده خدمات',
+                code: 'SERVICE_READ',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'ویرایش خدمات',
+                code: 'SERVICE_UPDATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'حذف خدمات',
+                code: 'SERVICE_DELETE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        ]);
     },
     down: async (queryInterface, Sequelize) => {
         await queryInterface.dropTable('services');

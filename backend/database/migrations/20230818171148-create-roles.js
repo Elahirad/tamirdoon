@@ -21,6 +21,27 @@ module.exports = {
                 defaultValue: Sequelize.DataTypes.NOW,
             }
         });
+
+        await queryInterface.bulkInsert('permissions', [
+            {
+                name: 'مشاهده نقش ادمین ها',
+                code: 'ROLE_READ',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'ویرایش نقش ادمین ها',
+                code: 'ROLE_UPDATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'حذف نقش ادمین ها',
+                code: 'ROLE_DELETE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        ]);
     },
     down: async (queryInterface, Sequelize) => {
         await queryInterface.dropTable('roles');

@@ -50,6 +50,27 @@ module.exports = {
                 defaultValue: Sequelize.DataTypes.NOW,
             }
         });
+
+        await queryInterface.bulkInsert('permissions', [
+            {
+                name: 'مشاهده آگهی ها',
+                code: 'AD_READ',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'ویرایش آگهی ها',
+                code: 'AD_UPDATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'حذف آگهی ها',
+                code: 'AD_DELETE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        ]);
     },
     down: async (queryInterface, Sequelize) => {
         await queryInterface.dropTable('ads');

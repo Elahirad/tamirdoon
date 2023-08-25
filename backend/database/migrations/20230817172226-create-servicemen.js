@@ -82,6 +82,27 @@ module.exports = {
                 onDelete: 'CASCADE',
             }
         });
+
+        await queryInterface.bulkInsert('permissions', [
+            {
+                name: 'مشاهده سرویس دهندگان',
+                code: 'SERVICEMAN_READ',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'ویرایش سرویس دهندگان',
+                code: 'SERVICEMAN_UPDATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'حذف سرویس دهندگان',
+                code: 'SERVICEMAN_DELETE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        ]);
     },
     down: async (queryInterface, Sequelize) => {
         await queryInterface.dropTable('servicemen');
