@@ -7,6 +7,10 @@ const Permission = sequelize.define('Permission', {
     name: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    code: {
+        type: DataTypes.STRING,
+        allowNull: false
     }
 }, {tableName: 'permissions'});
 
@@ -16,6 +20,7 @@ Permission.belongsToMany(Role, { through: 'rolePermissions', foreignKey: 'permis
 function permissionCreateValidate(permission) {
     const schema = Joi.object({
         name: Joi.string().required(),
+        code: Joi.string().required()
     });
     return schema.validate(permission);
 }
