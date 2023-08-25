@@ -3,7 +3,7 @@ const router = express.Router();
 const { Role, roleCreateValidate } = require('../models/role');
 
 router.get('/', async (req, res) => {
-    res.send(Role.findAll());
+    res.send(await Role.findAll());
 });
 
 router.post('/create', async (req, res) => { // needs middleware to do this
