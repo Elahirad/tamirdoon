@@ -52,6 +52,27 @@ module.exports = {
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE',
         });
+
+        await queryInterface.bulkInsert('permissions', [
+            {
+                name: 'مشاهده چت ها',
+                code: 'CHAT_READ',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'ویرایش چت ها',
+                code: 'CHAT_UPDATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'حذف چت ها',
+                code: 'CHAT_DELETE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        ]);
     },
     down: async (queryInterface, Sequelize) => {
         await queryInterface.dropTable('chats');
