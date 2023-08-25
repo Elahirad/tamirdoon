@@ -1,19 +1,17 @@
 import {
 	Heading,
 	Icon,
-	IconButton,
 	Table,
 	TableContainer,
 	Tbody,
-	Td,
 	Th,
 	Thead,
 	Tr,
 	VStack,
 } from '@chakra-ui/react';
-import {MdOutlineVerified} from 'react-icons/md';
 import {BiEditAlt} from 'react-icons/bi';
 import {MdDelete} from 'react-icons/md';
+import AdminPanelUserRow from '../../../components/Admin/AdminPanelUserRow';
 
 const AdminPanelUsersPage = () => {
 	return (
@@ -30,62 +28,18 @@ const AdminPanelUsersPage = () => {
 							<Th>نام خانوادگی</Th>
 							<Th>ایمیل</Th>
 							<Th>شماره تلفن</Th>
-							<Th>
+							<Th textAlign="center">
 								<Icon as={BiEditAlt} />
 							</Th>
-							<Th>
+							<Th textAlign="center">
 								<Icon as={MdDelete} />
 							</Th>
 						</Tr>
 					</Thead>
 					<Tbody>
-						<Tr>
-							<Td>1</Td>
-							<Td>علی</Td>
-							<Td>الهی راد</Td>
-							<Td>
-								alielahirad8087@gmail.com{' '}
-								<Icon as={MdOutlineVerified} color="green.400" />
-							</Td>
-							<Td>
-								09152620887 <Icon as={MdOutlineVerified} color="green.400" />
-							</Td>
-							<Td>
-								<IconButton
-									aria-label="edit-user"
-									icon={<BiEditAlt />}
-									colorScheme="blue"
-								/>
-							</Td>
-							<Td>
-								<IconButton
-									aria-label="delete-user"
-									icon={<MdDelete />}
-									colorScheme="red"
-								/>
-							</Td>
-						</Tr>
-						<Tr>
-							<Td>2</Td>
-							<Td>امیرحسین</Td>
-							<Td>فیروزی</Td>
-							<Td>amirfrz@gmail.com</Td>
-							<Td></Td>
-							<Td>
-								<IconButton
-									aria-label="edit-user"
-									icon={<BiEditAlt />}
-									colorScheme="blue"
-								/>
-							</Td>
-							<Td>
-								<IconButton
-									aria-label="delete-user"
-									icon={<MdDelete />}
-									colorScheme="red"
-								/>
-							</Td>
-						</Tr>
+						{SAMPLE_USERS.map((u) => (
+							<AdminPanelUserRow key={u.id} user={u} />
+						))}
 					</Tbody>
 				</Table>
 			</TableContainer>
@@ -94,3 +48,33 @@ const AdminPanelUsersPage = () => {
 };
 
 export default AdminPanelUsersPage;
+
+const SAMPLE_USERS = [
+	{
+		id: 1,
+		firstName: 'علی',
+		lastName: 'الهی راد',
+		email: 'ali@ali.com',
+		phoneNumber: '09152620887',
+		emailIsVerified: true,
+		phoneNumberIsVerified: true,
+	},
+	{
+		id: 2,
+		firstName: 'امیر',
+		lastName: 'فیروزی',
+		email: 'amir@amir.com',
+		phoneNumber: '',
+		emailIsVerified: true,
+		phoneNumberIsVerified: false,
+	},
+	{
+		id: 3,
+		firstName: 'حصین',
+		lastName: 'رحمتی',
+		email: 'ho3ein@ho3ein.com',
+		phoneNumber: '09858558585',
+		emailIsVerified: false,
+		phoneNumberIsVerified: true,
+	},
+];
