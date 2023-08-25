@@ -1,32 +1,45 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('chats', {
+        await queryInterface.createTable('comments', {
             id: {
                 type: Sequelize.DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
             },
-            message:{
+            title:{
                 type: Sequelize.DataTypes.STRING,
                 allowNull: false
             },
-            isRead:{
-                type: Sequelize.DataTypes.BOOLEAN,
-                default: false,
+            description :{
+                type: Sequelize.DataTypes.STRING,
+                allowNull: false
             },
-            to: {
+            positivePoints:{
+                type: Sequelize.DataTypes.STRING
+            },
+            negativePoints:{
+                type: Sequelize.DataTypes.STRING
+            },
+            status: {
+                type: Sequelize.DataTypes.ENUM('pending', 'accepted', 'rejected'),
+                default: 'pending'
+            },
+            isRecommended:{
+                type: Sequelize.DataTypes.BOOLEAN,
+            },
+            customerId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'users',
+                    model: 'customers',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            from: {
+            servicemanId: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'users',
+                    model: 'servicemen',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
@@ -43,38 +56,29 @@ module.exports = {
                 defaultValue: Sequelize.DataTypes.NOW,
             }
         });
-        await queryInterface.addColumn('chats', 'replyTo', {
-            type: Sequelize.DataTypes.INTEGER,
-            references: {
-                model: 'chats',
-                key: 'id',
-            },
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE',
-        });
 
         await queryInterface.bulkInsert('permissions', [
             {
-                name: 'مشاهده چت ها',
-                code: 'CHAT_READ',
+                name: 'مشاهده نظرات',
+                code: 'COMMENT_READ',
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
             {
-                name: 'ویرایش چت ها',
-                code: 'CHAT_UPDATE',
+                name: 'ویرایش نظرات',
+                code: 'COMMENT_UPDATE',
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
             {
-                name: 'حذف چت ها',
-                code: 'CHAT_DELETE',
+                name: 'حذف نظرات',
+                code: 'COMMENT_DELETE',
                 createdAt: new Date(),
                 updatedAt: new Date(),
             }
         ]);
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('chats');
+        await queryInterface.dropTable('comments');
     }
 }

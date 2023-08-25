@@ -1,22 +1,10 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('services', {
+        await queryInterface.createTable('users', {
             id: {
                 type: Sequelize.DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
-            },
-            name: {
-                type: Sequelize.DataTypes.STRING
-            },
-            categoryId: {
-                type: Sequelize.DataTypes.INTEGER,
-                references: {
-                    model: 'categories',
-                    key: 'id',
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE',
             },
             createdAt: {
                 type: Sequelize.DataTypes.DATE,
@@ -32,26 +20,26 @@ module.exports = {
 
         await queryInterface.bulkInsert('permissions', [
             {
-                name: 'مشاهده خدمات',
-                code: 'SERVICE_READ',
+                name: 'مشاهده کاربران',
+                code: 'USER_READ',
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
             {
-                name: 'ویرایش خدمات',
-                code: 'SERVICE_UPDATE',
+                name: 'ویرایش کاربران',
+                code: 'USER_UPDATE',
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
             {
-                name: 'حذف خدمات',
-                code: 'SERVICE_DELETE',
+                name: 'حذف کاربران',
+                code: 'USER_DELETE',
                 createdAt: new Date(),
                 updatedAt: new Date(),
             }
         ]);
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('services');
+        await queryInterface.dropTable('users');
     }
 }

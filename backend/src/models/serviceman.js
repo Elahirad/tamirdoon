@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 const {sequelize} = require("../../config/db.js");
 const {Image} = require('./image');
-const Client = require('./client');
+const User = require('./user');
 const ServiceStation = require('serviceStation');
 const jwt = require('jsonwebtoken');
 const config = require('config');
@@ -24,16 +24,7 @@ const Serviceman = sequelize.define('Serviceman', {
             }
         },
         phoneNumber: {
-            type: DataTypes.STRING,
-            validate: {
-                isPhoneNumberFormat(value) {
-                    const phoneNumberRegex = /^\d{11}$/;
-
-                    if (!phoneNumberRegex.test(value)) {
-                        throw new Error('Invalid phone number format. Please use XXXX-XXX-XXXX.');
-                    }
-                }
-            }
+            type: DataTypes.STRING
         },
         email: {
             type: DataTypes.STRING,
@@ -72,8 +63,8 @@ Serviceman.prototype.generateAuthToken = function () {
 Image.hasOne(Serviceman, {foreignKey: 'imageId'});
 Serviceman.belongsTo(Image, {foreignKey: 'imageId'});
 
-Client.hasOne(Serviceman, {foreignKey: 'clientId'});
-Serviceman.belongsTo(Client, {foreignKey: 'clientId'});
+User.hasOne(Serviceman, {foreignKey: 'userId'});
+Serviceman.belongsTo(User, {foreignKey: 'userId'});
 
 ServiceStation.hasMany(Serviceman, {foreignKey: 'serviceStationId'});
 Serviceman.belongsTo(ServiceStation, {foreignKey: 'serviceStationId'});
@@ -83,15 +74,15 @@ Serviceman.beforeCreate(async (user) => {
         const client = await Client.create();
         user.ClientId = client.id;
     } catch (error) {
-        throw new Error('Error creating client for serviceman');
+        throw new Error('Error creating user for serviceman');
     }
 });
 
 function servicemanSignUpValidate(serviceman) {
     const schema = Joi.object({
         name: Joi.string().min(2).max(50).required(),
-        lastName: Joi.string().min(2).max(50).required(),
-        phoneNumber: Joi.string().pattern(/^\d{11}$/).required(),
+        lastName: Joi.string().min(2).max(50),
+        phoneNumber: Joi.string().pattern(/^\d{11}$/),
         email: Joi.string().email().required(),
         password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/).required()
     })
