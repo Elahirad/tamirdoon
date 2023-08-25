@@ -8,7 +8,7 @@ module.exports = {
 
 		const usersData = [];
 		for (let i = 0; i < 10; i++) {
-			const client = await queryInterface.bulkInsert('clients', [
+			const user = await queryInterface.bulkInsert('users', [
 				{createdAt: new Date(), updatedAt: new Date()},
 			]);
 
@@ -37,7 +37,7 @@ module.exports = {
 				phoneNumberIsVerified: i % 2 === 0,
 				emailIsVerified: i % 3 === 0,
 				password: hashedPassword,
-				clientId: client,
+				userId: user,
 				serviceStationId: station,
 				createdAt: new Date(),
 				updatedAt: new Date(),
@@ -50,6 +50,6 @@ module.exports = {
 	down: async (queryInterface, Sequelize) => {
 		await queryInterface.bulkDelete('servicemen', null, {});
 
-		await queryInterface.bulkDelete('clients', null, {});
+		await queryInterface.bulkDelete('users', null, {});
 	},
 };
