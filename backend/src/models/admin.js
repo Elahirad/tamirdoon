@@ -1,7 +1,8 @@
 const {DataTypes} = require("sequelize");
 const {sequelize} = require("../../config/db.js");
 const {Image} = require("./image");
-const Client = require("./client");
+const User = require("./user");
+const Joi = require("joi");
 
 const Admin = sequelize.define("Admin", {
         firstName: {
@@ -21,17 +22,6 @@ const Admin = sequelize.define("Admin", {
         },
         phoneNumber: {
             type: DataTypes.STRING,
-            validate: {
-                isPhoneNumberFormat(value) {
-                    const phoneNumberRegex = /^\d{11}$/;
-
-                    if (!phoneNumberRegex.test(value)) {
-                        throw new Error(
-                            "Invalid phone number format. Please use XXXX-XXX-XXXX."
-                        );
-                    }
-                },
-            },
         },
         email: {
             type: DataTypes.STRING,
@@ -54,16 +44,27 @@ const Admin = sequelize.define("Admin", {
 Image.hasOne(Admin, {foreignKey: 'imageId'});
 Admin.belongsTo(Image, {foreignKey: 'imageId'});
 
-Client.hasOne(Admin, {foreignKey: 'clientId'});
-Admin.belongsTo(Client, {foreignKey: 'clientId'});
+User.hasOne(Admin, {foreignKey: 'userId'});
+Admin.belongsTo(User, {foreignKey: 'userId'});
 
 Admin.beforeCreate(async (admin) => {
     try {
         const client = await Client.create();
         admin.ClientId = client.id;
     } catch (error) {
-        throw new Error("Error creating client for admin");
+        throw new Error("Error creating user for admin");
     }
 });
 
-module.exports = { Admin };
+function adminCreateValidate(customer) {
+    const schema = Joi.object({
+        firstName: Joi.string().min(2).max(50).required(),
+        lastName: Joi.string().min(2).max(50),
+        phoneNumber: Joi.string().pattern(/^\d{11}$/),
+        email: Joi.string().email().required(),
+        password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/).required(),
+    });
+    return schema.validate(customer);
+}
+
+module.exports = { Admin, adminCreateValidate };

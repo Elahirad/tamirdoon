@@ -1,10 +1,18 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('clients', {
+        await queryInterface.createTable('permissions', {
             id: {
                 type: Sequelize.DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
+            },
+            name: {
+                type: Sequelize.DataTypes.STRING,
+                allowNull: false,
+            },
+            code: {
+                type: Sequelize.DataTypes.STRING,
+                allowNull: false,
             },
             createdAt: {
                 type: Sequelize.DataTypes.DATE,
@@ -19,6 +27,6 @@ module.exports = {
         });
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('clients');
+        await queryInterface.dropTable('permissions');
     }
 }

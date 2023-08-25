@@ -1,6 +1,11 @@
 module.exports = {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.createTable('chats', {
+            id: {
+                type: Sequelize.DataTypes.INTEGER,
+                primaryKey: true,
+                autoIncrement: true,
+            },
             message:{
                 type: Sequelize.DataTypes.STRING,
                 allowNull: false
@@ -12,7 +17,7 @@ module.exports = {
             to: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'clients',
+                    model: 'users',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
@@ -21,16 +26,7 @@ module.exports = {
             from: {
                 type: Sequelize.DataTypes.INTEGER,
                 references: {
-                    model: 'clients',
-                    key: 'id',
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE',
-            },
-            replyTo: {
-                type: Sequelize.DataTypes.INTEGER,
-                references: {
-                    model: 'chats',
+                    model: 'users',
                     key: 'id',
                 },
                 onUpdate: 'CASCADE',
@@ -47,6 +43,36 @@ module.exports = {
                 defaultValue: Sequelize.DataTypes.NOW,
             }
         });
+        await queryInterface.addColumn('chats', 'replyTo', {
+            type: Sequelize.DataTypes.INTEGER,
+            references: {
+                model: 'chats',
+                key: 'id',
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
+        });
+
+        await queryInterface.bulkInsert('permissions', [
+            {
+                name: 'مشاهده چت ها',
+                code: 'CHAT_READ',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'ویرایش چت ها',
+                code: 'CHAT_UPDATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                name: 'حذف چت ها',
+                code: 'CHAT_DELETE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
+        ]);
     },
     down: async (queryInterface, Sequelize) => {
         await queryInterface.dropTable('chats');
