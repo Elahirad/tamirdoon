@@ -16,7 +16,7 @@ import {
 import {IconType} from 'react-icons';
 import {BiUser} from 'react-icons/bi';
 import {LiaBullhornSolid} from 'react-icons/lia';
-import {BsBriefcase} from 'react-icons/bs';
+import {BsBriefcase, BsPersonGear} from 'react-icons/bs';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 
@@ -154,6 +154,12 @@ const SIDEBAR_ITEMS: SideBarItem[] = [
 		name: 'سرویس دهندگان',
 		href: '/admin/panel/servicemen',
 		icon: BsBriefcase,
+	},
+	{
+		id: 4,
+		name: 'نقش ها',
+		href: '/admin/panel/roles',
+		icon: BsPersonGear,
 	},
 ];
 
