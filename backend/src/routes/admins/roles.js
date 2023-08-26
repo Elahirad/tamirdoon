@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { Role, roleCreateValidate, roleUpdateValidate } = require('../models/role');
-const {Permission} = require("../models/permission");
+const { Role, roleCreateValidate, roleUpdateValidate } = require('../../models/role');
+const {Permission} = require("../../models/permission");
 
 router.get('/', async (req, res) => {
     res.send(await Role.findAll());
