@@ -12,7 +12,6 @@ import {
 } from '@chakra-ui/react';
 import {BiEditAlt} from 'react-icons/bi';
 import {MdDelete} from 'react-icons/md';
-import AdminPanelUserRow from '../../../../../components/Admin/AdminPanelUserRow';
 import AdminPanelRoleRow from '@/components/Admin/AdminPanelRoleRow';
 
 export default function Page() {
@@ -27,7 +26,7 @@ export default function Page() {
 						<Tr>
 							<Th>#</Th>
 							<Th>نام</Th>
-							<Th>دسترسی ها</Th>
+							<Th textAlign="center">دسترسی ها</Th>
 							<Th textAlign="center">
 								<Icon as={BiEditAlt} />
 							</Th>
@@ -96,17 +95,17 @@ const SAMPLE_ROLES: Role[] = [
 		name: 'ادمین چت ها',
 		permissions: [
 			{
-				id: 1,
+				id: 4,
 				code: 'CHAT_READ',
 				name: 'خواندن چت ها',
 			},
 			{
-				id: 2,
+				id: 5,
 				code: 'CHAT_UPDATE',
 				name: 'ویرایش چت ها',
 			},
 			{
-				id: 3,
+				id: 6,
 				code: 'CHAT_DELETE',
 				name: 'حذف چت ها',
 			},
