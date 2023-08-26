@@ -1,9 +1,8 @@
 'use client';
-import {GoogleOAuthProvider} from '@react-oauth/google';
 import theme from '../theme';
-import {ChakraProvider} from '@chakra-ui/provider';
 import {ColorModeScript} from '@chakra-ui/color-mode';
 import './index.css';
+import {Providers} from './providers';
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
@@ -15,14 +14,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 				<title>تعمیردون</title>
 			</head>
 			<body>
-				<ChakraProvider theme={theme}>
-					<GoogleOAuthProvider clientId="235966621376-febvbsti7cd4ho8kaqgce1a06qpbava6.apps.googleusercontent.com">
-						<ColorModeScript
-							initialColorMode={theme.themeConfig.initialColorMode}
-						/>
-						{children}
-					</GoogleOAuthProvider>
-				</ChakraProvider>
+				<Providers>
+					<ColorModeScript
+						initialColorMode={theme.themeConfig.initialColorMode}
+					/>
+					{children}
+				</Providers>
 			</body>
 		</html>
 	);
