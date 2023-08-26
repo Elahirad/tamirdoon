@@ -25,3 +25,6 @@
 
 # Ignore mysql_data
 mysql_data/
+
+# Ignore .next
+**/.next/**

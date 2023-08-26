@@ -1,3 +1,4 @@
+'use client';
 import {
 	Box,
 	Flex,
@@ -32,7 +33,7 @@ import {
 	MoonIcon,
 	SunIcon,
 } from '@chakra-ui/icons';
-import {Link} from 'react-router-dom';
+import Link from 'next/link';
 import {useEffect} from 'react';
 import apiClient from '../services/apiClient';
 import useUserStore from '../hooks/store/useUserStore';
@@ -101,7 +102,7 @@ export default function Navbar() {
 					justify={{base: 'center', md: 'start'}}
 					align="center"
 				>
-					<Link to="/">
+					<Link href="/">
 						<Heading
 							margin={2}
 							as="h1"
@@ -165,7 +166,7 @@ export default function Navbar() {
 							<Button onClick={() => toggleColorMode()}>
 								{colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
 							</Button>
-							<Link to="/signup">
+							<Link href="/register">
 								<Button
 									bgGradient="linear(to-r, red.400, pink.400)"
 									color="white"
@@ -178,7 +179,7 @@ export default function Navbar() {
 								</Button>
 							</Link>
 						</Show>
-						<Link to="/signin">
+						<Link href="/login">
 							<Button
 								bgGradient="linear(to-r, pink.400, blue.300)"
 								color="white"
@@ -212,7 +213,7 @@ const DesktopNav = () => {
 				<Box key={navItem.label}>
 					<Popover trigger={'hover'} placement={'bottom-start'}>
 						<PopoverTrigger>
-							<Link to={navItem.href || '#'}>
+							<Link href={navItem.href || '#'}>
 								<Box
 									p={2}
 									fontSize={'sm'}
@@ -253,7 +254,7 @@ const DesktopNav = () => {
 
 const DesktopSubNav = ({label, href, subLabel}: NavItem) => {
 	return (
-		<Link to={href ?? '#'}>
+		<Link href={href ?? '#'}>
 			<Box
 				role="group"
 				display="block"
@@ -308,7 +309,7 @@ const MobileNavItem = ({label, children, href}: NavItem) => {
 
 	return (
 		<Stack spacing={4} onClick={children && onToggle}>
-			<Link to={href ?? '#'}>
+			<Link href={href ?? '#'}>
 				<Box
 					py={2}
 					justifyContent="space-between"
@@ -346,7 +347,7 @@ const MobileNavItem = ({label, children, href}: NavItem) => {
 				>
 					{children &&
 						children.map((child) => (
-							<Link to={child.href ?? '#'} key={child.label}>
+							<Link href={child.href ?? '#'} key={child.label}>
 								<Box key={child.label} py={2}>
 									{child.label}
 								</Box>
@@ -377,12 +378,12 @@ const NAV_ITEMS: Array<NavItem> = [
 			{
 				label: 'ورود سرویس دهندگان',
 				subLabel: 'ورود به حساب کاربری به عنوان سرویس دهنده',
-				href: '/servicemen/signin',
+				href: '/servicemen/login',
 			},
 			{
 				label: 'ثبت نام سرویس دهندگان',
 				subLabel: 'ثبت نام به عنوان سرویس دهنده',
-				href: '/servicemen/signup',
+				href: '/servicemen/register',
 			},
 		],
 	},

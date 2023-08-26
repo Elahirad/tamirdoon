@@ -1,3 +1,4 @@
+'use client';
 import {
 	Button,
 	FormControl,
@@ -8,20 +9,21 @@ import {
 	Text,
 	Checkbox,
 	Flex,
-	Box,
 } from '@chakra-ui/react';
-import FormContainer from '../components/FormContainer';
+import FormContainer from '../../../../components/FormContainer';
 import * as Yup from 'yup';
-import {Field, Form, Formik, FormikHelpers} from 'formik';
-import apiClient from '../services/apiClient.ts';
-import {Link, useNavigate} from 'react-router-dom';
-import {CredentialResponse, GoogleLogin} from '@react-oauth/google';
-import useUserStore from '../hooks/store/useUserStore.ts';
-import useSuccessToast from '../hooks/useSuccessToast.ts';
-import useErrorToast from '../hooks/useErrorToast.ts';
+import {Field, Form, Formik, FormikHelpers, FormikProps} from 'formik';
+import apiClient from '../../../../services/apiClient';
+import Link from 'next/link';
+import {useRouter} from 'next/navigation';
+import {useEffect} from 'react';
+import useErrorToast from '../../../../hooks/useErrorToast';
+import useSuccessToast from '../../../../hooks/useSuccessToast';
+import useInfoToast from '../../../../hooks/useInfoToast';
+import {useSearchParams} from 'next/navigation';
 
 const SigninSchema = Yup.object().shape({
-	username: Yup.string().required('ایمیل یا شماره موبایل را وارد کنید'),
+	username: Yup.string().required('نام کاربری را وارد کنید'),
 	password: Yup.string().required('رمز عبور را وارد کنید'),
 });
 
@@ -31,25 +33,27 @@ interface FormValues {
 	remember: boolean;
 }
 
-interface OAuthCallbackResponse {
-	id: number;
-	firstName: string;
-	lastName: string;
-	email: string;
-}
+export default function Page() {
+	const searchParams = useSearchParams();
+	const router = useRouter();
 
-const SigninPage = () => {
-	const updateLogin = useUserStore((store) => store.updateLogin);
-	const navigate = useNavigate();
+	const redirected = searchParams.get('redirected');
 	const errorToast = useErrorToast();
 	const successToast = useSuccessToast();
+	const infoToast = useInfoToast();
+
+	useEffect(() => {
+		if (redirected) infoToast('توجه !', 'برای استفاده از پنل ادمین وارد شوید');
+		router.replace('/admin/login');
+	}, []);
+
 	const submitHandler = (
 		values: FormValues,
 		actions: FormikHelpers<FormValues>
 	) => {
 		const {username, password, remember} = values;
 		apiClient
-			.post('/users/sign-in', {
+			.post('/admin/sign-in', {
 				username,
 				password,
 				remember,
@@ -57,51 +61,26 @@ const SigninPage = () => {
 			.then(() => {
 				actions.resetForm();
 				successToast(
-					'ورود موفقیت آمیز!',
+					'ورود موفقیت آمیز !',
 					'با موفقیت به حساب کاربری خود وارد شدید'
 				);
-				navigate('/');
-				updateLogin();
 			})
 			.catch(() => {
 				errorToast('خطای نامشخصی رخ داد.');
 			});
 	};
-
-	const successHandler = (response: CredentialResponse) => {
-		apiClient
-			.post<OAuthCallbackResponse>('http://localhost:3000/api/oauth/verify', {
-				credential: response.credential,
-			})
-			.then((res) => {
-				successToast(
-					'ورود موفقیت آمیز!',
-					'با موفقیت به حساب کاربری خود وارد شدید'
-				);
-				navigate('/');
-				updateLogin();
-			})
-			.catch(() => {
-				errorToast('خطای نامشخصی رخ داد.');
-			});
-	};
-
-	const errorHandler = () => {
-		errorToast('خطای نامشخصی رخ داد.');
-	};
-
 	return (
 		<FormContainer>
 			<Heading textAlign="center">
-				ورود به{' '}
+				ورود{' '}
 				<Text
 					as="span"
-					bgGradient="linear(to-r, red.400, pink.400)"
+					bgGradient="linear(to-r, red.400, orange.400)"
 					bgClip="text"
 				>
-					تعمیردون
+					همکاران
 				</Text>{' '}
-				👋
+				❤️🤝
 			</Heading>
 			<Formik
 				initialValues={{
@@ -112,10 +91,10 @@ const SigninPage = () => {
 				validationSchema={SigninSchema}
 				onSubmit={submitHandler}
 			>
-				{({errors, touched}) => (
+				{({errors, touched}: FormikProps<FormValues>) => (
 					<VStack as={Form} width="100%">
 						<FormControl marginTop={5} isRequired>
-							<FormLabel>ایمیل یا شماره موبایل</FormLabel>
+							<FormLabel>نام کاربری</FormLabel>
 							<Field
 								as={Input}
 								id="username"
@@ -144,7 +123,7 @@ const SigninPage = () => {
 							<Field as={Checkbox} type="checkbox" name="remember">
 								مرا به خاطر بسپار
 							</Field>
-							<Link to="#">
+							<Link href="#">
 								<Text as="span" color="blue.400">
 									فراموشی رمز عبور
 								</Text>
@@ -166,19 +145,6 @@ const SigninPage = () => {
 					</VStack>
 				)}
 			</Formik>
-			<Box mt={3}>
-				<GoogleLogin onSuccess={successHandler} onError={errorHandler} />
-			</Box>
-			<Text mt={5}>
-				حساب کاربری ندارید ؟{' '}
-				<Link to="/signup">
-					<Text color="blue.400" as="span">
-						ثبت نام کنید
-					</Text>
-				</Link>
-			</Text>
 		</FormContainer>
 	);
-};
-
-export default SigninPage;
+}
