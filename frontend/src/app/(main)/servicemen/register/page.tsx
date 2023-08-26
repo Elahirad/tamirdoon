@@ -1,3 +1,4 @@
+'use client';
 import {
 	Button,
 	FormControl,
@@ -8,15 +9,15 @@ import {
 	Text,
 	VStack,
 } from '@chakra-ui/react';
-import FormContainer from '../../components/FormContainer';
+import FormContainer from '../../../../components/FormContainer';
 import * as Yup from 'yup';
-import {Field, Form, Formik, FormikHelpers} from 'formik';
-import apiClient from '../../services/apiClient';
-import {Link} from 'react-router-dom';
-import useErrorToast from '../../hooks/useErrorToast';
-import useSuccessToast from '../../hooks/useSuccessToast';
+import {Field, Form, Formik, FormikHelpers, FormikProps} from 'formik';
+import apiClient from '../../../../services/apiClient';
+import Link from 'next/link';
+import useErrorToast from '../../../../hooks/useErrorToast';
+import useSuccessToast from '../../../../hooks/useSuccessToast';
 
-const SignupSchema = Yup.object().shape({
+const RegisterSchema = Yup.object().shape({
 	firstName: Yup.string()
 		.min(3, 'نام حداقل باید 3 کلمه باشد')
 		.max(50, 'نام حداکثر می تواند 50 کلمه باشد')
@@ -53,7 +54,7 @@ interface FormValues {
 	password_repeat: string;
 }
 
-const ServicemanSignupPage = () => {
+export default function Page() {
 	const errorToast = useErrorToast();
 	const successToast = useSuccessToast();
 	const submitHandler = (
@@ -114,10 +115,10 @@ const ServicemanSignupPage = () => {
 					password: '',
 					password_repeat: '',
 				}}
-				validationSchema={SignupSchema}
+				validationSchema={RegisterSchema}
 				onSubmit={submitHandler}
 			>
-				{({errors, touched}) => (
+				{({errors, touched}: FormikProps<FormValues>) => (
 					<VStack as={Form} width="100%">
 						<HStack width="100%">
 							<FormControl marginTop={5} isRequired>
@@ -209,7 +210,7 @@ const ServicemanSignupPage = () => {
 			</Formik>
 			<Text mt={5}>
 				حساب کاربری دارید ؟{' '}
-				<Link to="/signin">
+				<Link href="/signin">
 					<Text color="blue.400" as="span">
 						وارد شوید
 					</Text>
@@ -217,6 +218,4 @@ const ServicemanSignupPage = () => {
 			</Text>
 		</FormContainer>
 	);
-};
-
-export default ServicemanSignupPage;
+}

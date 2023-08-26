@@ -1,3 +1,4 @@
+'use client';
 import {
 	Heading,
 	Icon,
@@ -11,13 +12,9 @@ import {
 } from '@chakra-ui/react';
 import {BiEditAlt} from 'react-icons/bi';
 import {MdDelete} from 'react-icons/md';
-import AdminPanelUserRow from '../../../components/Admin/AdminPanelUserRow';
-import {useEffect} from 'react';
+import AdminPanelUserRow from '../../../../../components/Admin/AdminPanelUserRow';
 
-const AdminPanelUsersPage = () => {
-	useEffect(() => {
-		document.title = 'پنل همکاران | مدیریت کاربران';
-	}, []);
+export default function Page() {
 	return (
 		<VStack width="100%" align="flex-start">
 			<Heading as="h2" mt={5} mr={3}>
@@ -49,10 +46,7 @@ const AdminPanelUsersPage = () => {
 			</TableContainer>
 		</VStack>
 	);
-};
-
-export default AdminPanelUsersPage;
-
+}
 const SAMPLE_USERS = [
 	{
 		id: 1,

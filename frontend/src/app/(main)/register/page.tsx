@@ -1,3 +1,4 @@
+'use client';
 import {
 	Button,
 	FormControl,
@@ -8,15 +9,16 @@ import {
 	Text,
 	VStack,
 } from '@chakra-ui/react';
-import FormContainer from '../components/FormContainer';
+import FormContainer from '../../../components/FormContainer';
 import * as Yup from 'yup';
-import {Field, Form, Formik, FormikHelpers} from 'formik';
-import apiClient from '../services/apiClient.ts';
-import {Link, useNavigate} from 'react-router-dom';
+import {Field, Form, Formik, FormikHelpers, FormikProps} from 'formik';
+import apiClient from '../../../services/apiClient';
+import Link from 'next/link';
+import {useRouter} from 'next/navigation';
 import _ from 'lodash';
-import useUserStore from '../hooks/store/useUserStore.ts';
-import useErrorToast from '../hooks/useErrorToast.ts';
-import useSuccessToast from '../hooks/useSuccessToast.ts';
+import useUserStore from '../../../hooks/store/useUserStore';
+import useErrorToast from '../../../hooks/useErrorToast';
+import useSuccessToast from '../../../hooks/useSuccessToast';
 
 const SignupSchema = Yup.object().shape({
 	firstName: Yup.string()
@@ -52,8 +54,8 @@ interface FormValues {
 	password_repeat: string;
 }
 
-const Signup = () => {
-	const navigate = useNavigate();
+export default function Page() {
+	const router = useRouter();
 	const updateLogin = useUserStore((store) => store.updateLogin);
 	const errorToast = useErrorToast();
 	const successToast = useSuccessToast();
@@ -76,7 +78,7 @@ const Signup = () => {
 			.then(() => {
 				actions.resetForm();
 				successToast('حساب ساخته شد !', 'حساب کاربری شما با موفقیت ساخته شد');
-				navigate('/');
+				router.push('/');
 				updateLogin();
 			})
 			.catch(() => {
@@ -108,7 +110,7 @@ const Signup = () => {
 				validationSchema={SignupSchema}
 				onSubmit={submitHandler}
 			>
-				{({errors, touched}) => (
+				{({errors, touched}: FormikProps<FormValues>) => (
 					<VStack as={Form} width="100%">
 						<HStack width="100%">
 							<FormControl marginTop={5} isRequired>
@@ -200,7 +202,7 @@ const Signup = () => {
 			</Formik>
 			<Text mt={5}>
 				حساب کاربری دارید ؟{' '}
-				<Link to="/signin">
+				<Link href="/login">
 					<Text color="blue.400" as="span">
 						وارد شوید
 					</Text>
@@ -208,6 +210,4 @@ const Signup = () => {
 			</Text>
 		</FormContainer>
 	);
-};
-
-export default Signup;
+}

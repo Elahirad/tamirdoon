@@ -1,3 +1,4 @@
+'use client';
 import {
 	Button,
 	FormControl,
@@ -8,14 +9,18 @@ import {
 	Text,
 	Checkbox,
 	Flex,
+	Box,
 } from '@chakra-ui/react';
-import FormContainer from '../../components/FormContainer.js';
+import FormContainer from '../../../components/FormContainer';
 import * as Yup from 'yup';
-import {Field, Form, Formik, FormikHelpers} from 'formik';
-import apiClient from '../../services/apiClient.js';
-import {Link} from 'react-router-dom';
-import useErrorToast from '../../hooks/useErrorToast.js';
-import useSuccessToast from '../../hooks/useSuccessToast.js';
+import {Field, Form, Formik, FormikHelpers, FormikProps} from 'formik';
+import apiClient from '../../../services/apiClient';
+import Link from 'next/link';
+import {useRouter} from 'next/navigation';
+import {CredentialResponse, GoogleLogin} from '@react-oauth/google';
+import useUserStore from '../../../hooks/store/useUserStore';
+import useSuccessToast from '../../../hooks/useSuccessToast';
+import useErrorToast from '../../../hooks/useErrorToast';
 
 const SigninSchema = Yup.object().shape({
 	username: Yup.string().required('ایمیل یا شماره موبایل را وارد کنید'),
@@ -28,7 +33,16 @@ interface FormValues {
 	remember: boolean;
 }
 
-const ServicemanSigninPage = () => {
+interface OAuthCallbackResponse {
+	id: number;
+	firstName: string;
+	lastName: string;
+	email: string;
+}
+
+export default function Page() {
+	const updateLogin = useUserStore((store) => store.updateLogin);
+	const router = useRouter();
 	const errorToast = useErrorToast();
 	const successToast = useSuccessToast();
 	const submitHandler = (
@@ -37,7 +51,7 @@ const ServicemanSigninPage = () => {
 	) => {
 		const {username, password, remember} = values;
 		apiClient
-			.post('/servicemen/sign-in', {
+			.post('/users/sign-in', {
 				username,
 				password,
 				remember,
@@ -45,26 +59,43 @@ const ServicemanSigninPage = () => {
 			.then(() => {
 				actions.resetForm();
 				successToast(
-					'ورود موفقیت آمیز !',
+					'ورود موفقیت آمیز!',
 					'با موفقیت به حساب کاربری خود وارد شدید'
 				);
+				router.push('/');
+				updateLogin();
 			})
 			.catch(() => {
 				errorToast('خطای نامشخصی رخ داد.');
 			});
 	};
+
+	const successHandler = (response: CredentialResponse) => {
+		apiClient
+			.post<OAuthCallbackResponse>('http://localhost:3000/api/oauth/verify', {
+				credential: response.credential,
+			})
+			.then((res) => {
+				successToast(
+					'ورود موفقیت آمیز!',
+					'با موفقیت به حساب کاربری خود وارد شدید'
+				);
+				router.push('/');
+				updateLogin();
+			})
+			.catch(() => {
+				errorToast('خطای نامشخصی رخ داد.');
+			});
+	};
+
+	const errorHandler = () => {
+		errorToast('خطای نامشخصی رخ داد.');
+	};
+
 	return (
 		<FormContainer>
 			<Heading textAlign="center">
-				ورود{' '}
-				<Text
-					as="span"
-					bgGradient="linear(to-r, blue.500, green.300)"
-					bgClip="text"
-				>
-					سرویس دهندگان
-				</Text>{' '}
-				به{' '}
+				ورود به{' '}
 				<Text
 					as="span"
 					bgGradient="linear(to-r, red.400, pink.400)"
@@ -72,7 +103,7 @@ const ServicemanSigninPage = () => {
 				>
 					تعمیردون
 				</Text>{' '}
-				👨‍🔧
+				👋
 			</Heading>
 			<Formik
 				initialValues={{
@@ -83,7 +114,7 @@ const ServicemanSigninPage = () => {
 				validationSchema={SigninSchema}
 				onSubmit={submitHandler}
 			>
-				{({errors, touched}) => (
+				{({errors, touched}: FormikProps<FormValues>) => (
 					<VStack as={Form} width="100%">
 						<FormControl marginTop={5} isRequired>
 							<FormLabel>ایمیل یا شماره موبایل</FormLabel>
@@ -115,7 +146,7 @@ const ServicemanSigninPage = () => {
 							<Field as={Checkbox} type="checkbox" name="remember">
 								مرا به خاطر بسپار
 							</Field>
-							<Link to="#">
+							<Link href="#">
 								<Text as="span" color="blue.400">
 									فراموشی رمز عبور
 								</Text>
@@ -137,9 +168,12 @@ const ServicemanSigninPage = () => {
 					</VStack>
 				)}
 			</Formik>
+			<Box mt={3}>
+				<GoogleLogin onSuccess={successHandler} onError={errorHandler} />
+			</Box>
 			<Text mt={5}>
 				حساب کاربری ندارید ؟{' '}
-				<Link to="/signup">
+				<Link href="/register">
 					<Text color="blue.400" as="span">
 						ثبت نام کنید
 					</Text>
@@ -147,6 +181,4 @@ const ServicemanSigninPage = () => {
 			</Text>
 		</FormContainer>
 	);
-};
-
-export default ServicemanSigninPage;
+}

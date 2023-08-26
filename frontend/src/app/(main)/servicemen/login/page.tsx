@@ -1,3 +1,4 @@
+'use client';
 import {
 	Button,
 	FormControl,
@@ -9,18 +10,16 @@ import {
 	Checkbox,
 	Flex,
 } from '@chakra-ui/react';
-import FormContainer from '../../components/FormContainer';
+import FormContainer from '../../../../components/FormContainer';
 import * as Yup from 'yup';
-import {Field, Form, Formik, FormikHelpers} from 'formik';
-import apiClient from '../../services/apiClient.ts';
-import {Link, useSearchParams} from 'react-router-dom';
-import {useEffect} from 'react';
-import useErrorToast from '../../hooks/useErrorToast.ts';
-import useSuccessToast from '../../hooks/useSuccessToast.ts';
-import useInfoToast from '../../hooks/useInfoToast.ts';
+import {Field, Form, Formik, FormikHelpers, FormikProps} from 'formik';
+import apiClient from '../../../../services/apiClient';
+import Link from 'next/link';
+import useErrorToast from '../../../../hooks/useErrorToast';
+import useSuccessToast from '../../../../hooks/useSuccessToast';
 
 const SigninSchema = Yup.object().shape({
-	username: Yup.string().required('نام کاربری را وارد کنید'),
+	username: Yup.string().required('ایمیل یا شماره موبایل را وارد کنید'),
 	password: Yup.string().required('رمز عبور را وارد کنید'),
 });
 
@@ -30,26 +29,16 @@ interface FormValues {
 	remember: boolean;
 }
 
-const AdminSigninPage = () => {
-	const [searchParams, setSearchParams] = useSearchParams();
-
-	const redirected = searchParams.get('redirected');
+export default function Page() {
 	const errorToast = useErrorToast();
 	const successToast = useSuccessToast();
-	const infoToast = useInfoToast();
-
-	useEffect(() => {
-		if (redirected) infoToast('توجه !', 'برای استفاده از پنل ادمین وارد شوید');
-		setSearchParams({});
-	}, []);
-
 	const submitHandler = (
 		values: FormValues,
 		actions: FormikHelpers<FormValues>
 	) => {
 		const {username, password, remember} = values;
 		apiClient
-			.post('/admin/sign-in', {
+			.post('/servicemen/sign-in', {
 				username,
 				password,
 				remember,
@@ -71,12 +60,20 @@ const AdminSigninPage = () => {
 				ورود{' '}
 				<Text
 					as="span"
-					bgGradient="linear(to-r, red.400, orange.400)"
+					bgGradient="linear(to-r, blue.500, green.300)"
 					bgClip="text"
 				>
-					همکاران
+					سرویس دهندگان
 				</Text>{' '}
-				❤️🤝
+				به{' '}
+				<Text
+					as="span"
+					bgGradient="linear(to-r, red.400, pink.400)"
+					bgClip="text"
+				>
+					تعمیردون
+				</Text>{' '}
+				👨‍🔧
 			</Heading>
 			<Formik
 				initialValues={{
@@ -87,10 +84,10 @@ const AdminSigninPage = () => {
 				validationSchema={SigninSchema}
 				onSubmit={submitHandler}
 			>
-				{({errors, touched}) => (
+				{({errors, touched}: FormikProps<FormValues>) => (
 					<VStack as={Form} width="100%">
 						<FormControl marginTop={5} isRequired>
-							<FormLabel>نام کاربری</FormLabel>
+							<FormLabel>ایمیل یا شماره موبایل</FormLabel>
 							<Field
 								as={Input}
 								id="username"
@@ -119,7 +116,7 @@ const AdminSigninPage = () => {
 							<Field as={Checkbox} type="checkbox" name="remember">
 								مرا به خاطر بسپار
 							</Field>
-							<Link to="#">
+							<Link href="#">
 								<Text as="span" color="blue.400">
 									فراموشی رمز عبور
 								</Text>
@@ -141,8 +138,14 @@ const AdminSigninPage = () => {
 					</VStack>
 				)}
 			</Formik>
+			<Text mt={5}>
+				حساب کاربری ندارید ؟{' '}
+				<Link href="/servicemen/register">
+					<Text color="blue.400" as="span">
+						ثبت نام کنید
+					</Text>
+				</Link>
+			</Text>
 		</FormContainer>
 	);
-};
-
-export default AdminSigninPage;
+}

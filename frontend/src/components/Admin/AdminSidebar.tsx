@@ -17,7 +17,8 @@ import {IconType} from 'react-icons';
 import {BiUser} from 'react-icons/bi';
 import {LiaBullhornSolid} from 'react-icons/lia';
 import {BsBriefcase} from 'react-icons/bs';
-import {Link, useLocation} from 'react-router-dom';
+import Link from 'next/link';
+import {usePathname} from 'next/navigation';
 
 interface Props {
 	isOpen: boolean;
@@ -25,41 +26,40 @@ interface Props {
 }
 
 const AdminSidebar = ({isOpen, onClose}: Props) => {
-	const path = useLocation().pathname.split('/');
-	const subPath = path[path.length - 1];
+	const path = usePathname();
 	return (
 		<>
 			<Show above="md">
-				<DesktopSideBar subPath={subPath} />
+				<DesktopSideBar path={path} />
 			</Show>
 			<Hide above="md">
-				<MobileSideBar isOpen={isOpen} onClose={onClose} subPath={subPath} />
+				<MobileSideBar isOpen={isOpen} onClose={onClose} path={path} />
 			</Hide>
 		</>
 	);
 };
 
 interface DesktopSideBarProps {
-	subPath: string;
+	path: string;
 }
 
-const DesktopSideBar = ({subPath}: DesktopSideBarProps) => {
+const DesktopSideBar = ({path}: DesktopSideBarProps) => {
 	return (
 		<VStack m={3} minW="250px" maxW="300px">
 			{SIDEBAR_ITEMS.map((item) => (
 				<Box key={item.id} width="full">
-					<Link to={item.href ?? '#'}>
+					<Link href={item.href ?? '#'}>
 						<HStack
 							width="100%"
 							p={3}
 							rounded={20}
 							bg={
-								subPath === item.href
+								path === item.href
 									? useColorModeValue('orange.300', 'orange.500')
 									: useColorModeValue('white', 'gray.800')
 							}
 							color={
-								subPath === item.href
+								path === item.href
 									? 'white'
 									: useColorModeValue('black', 'white')
 							}
@@ -82,10 +82,10 @@ const DesktopSideBar = ({subPath}: DesktopSideBarProps) => {
 interface MobileSideBarProps {
 	isOpen: boolean;
 	onClose: () => void;
-	subPath: string;
+	path: string;
 }
 
-const MobileSideBar = ({isOpen, onClose, subPath}: MobileSideBarProps) => {
+const MobileSideBar = ({isOpen, onClose, path}: MobileSideBarProps) => {
 	return (
 		<Drawer isOpen={isOpen} onClose={onClose} size="sm">
 			<DrawerOverlay />
@@ -94,19 +94,19 @@ const MobileSideBar = ({isOpen, onClose, subPath}: MobileSideBarProps) => {
 				<DrawerBody mt={5}>
 					<VStack m={3} minW="250px">
 						{SIDEBAR_ITEMS.map((item) => (
-							<Box width="full" onClick={() => onClose()}>
-								<Link to={item.href ?? '#'}>
+							<Box key={item.id} width="full" onClick={() => onClose()}>
+								<Link href={item.href ?? '#'}>
 									<HStack
 										width="100%"
 										p={3}
 										rounded={20}
 										bg={
-											subPath === item.href
+											path === item.href
 												? useColorModeValue('orange.300', 'orange.500')
 												: useColorModeValue('white', 'gray.700')
 										}
 										color={
-											subPath === item.href
+											path === item.href
 												? 'white'
 												: useColorModeValue('black', 'white')
 										}
@@ -140,19 +140,19 @@ const SIDEBAR_ITEMS: SideBarItem[] = [
 	{
 		id: 1,
 		name: 'کاربران',
-		href: 'users',
+		href: '/admin/panel/users',
 		icon: BiUser,
 	},
 	{
 		id: 2,
 		name: 'آگهی ها',
-		href: 'ads',
+		href: '/admin/panel/ads',
 		icon: LiaBullhornSolid,
 	},
 	{
 		id: 3,
 		name: 'سرویس دهندگان',
-		href: 'servicemen',
+		href: '/admin/panel/servicemen',
 		icon: BsBriefcase,
 	},
 ];
