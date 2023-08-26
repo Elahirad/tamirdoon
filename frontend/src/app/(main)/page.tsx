@@ -1,3 +1,6 @@
+'use client';
+import {Text} from '@chakra-ui/react';
+
 export default function Page() {
-	return <p>این صفحه اصلی است</p>;
+	return <Text>این صفحه اصلی است</Text>;
 }
