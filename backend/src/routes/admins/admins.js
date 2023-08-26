@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { Admin, adminCreateValidate } = require('../models/admin');
+const { Admin, adminCreateValidate } = require('../../models/admin');
 const {Op} = require("sequelize");
-const {Customer} = require("../models/customer");
+const {Customer} = require("../../models/customer");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 

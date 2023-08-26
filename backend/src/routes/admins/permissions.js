@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Permission, permissionCreateValidate } = require('../models/permission');
+const { Permission, permissionCreateValidate } = require('../../models/permission');
 
 router.get('/', async (req, res) => {
     res.send(await Permission.findAll());
