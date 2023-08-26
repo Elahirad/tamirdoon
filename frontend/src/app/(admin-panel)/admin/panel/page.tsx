@@ -1,5 +1,4 @@
-'use client';
-import {Center, Heading, Text, Box} from '@chakra-ui/react';
+import {Center, Heading, Text, Box} from '../../../../Chakra';
 
 const AdminHomePage = () => {
 	return (
