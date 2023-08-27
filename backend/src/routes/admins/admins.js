@@ -65,3 +65,12 @@ router.put('/:id', async (req, res) => {
 
     res.send(admin);
 });
+
+router.delete('/:id', async (req, res) => {
+    const admin = await Admin.findByPk(req.params.id);
+    if(!admin) return res.status(400).send("admin doesn't exist.");
+
+    await admin.destroy();
+
+    res.send('deleted successfully.')
+})
