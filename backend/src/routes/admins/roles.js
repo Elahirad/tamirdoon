@@ -52,15 +52,12 @@ router.put('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    const role = await Role.findOne({
-        where: { id: req.params.id}
-    });
+    const role = await Role.findByPk(req.params.id);
     if (!role) return res.status(400).send("Role doesn't exist.");
 
     await role.destroy();
 
     res.send('deleted successfully.')
-
-})
+});
 
 module.exports = router;
