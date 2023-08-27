@@ -63,8 +63,21 @@ function adminCreateValidate(customer) {
         phoneNumber: Joi.string().pattern(/^\d{11}$/),
         email: Joi.string().email().required(),
         password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/).required(),
+        roleId: Joi.number().integer()
     });
     return schema.validate(customer);
 }
 
-module.exports = { Admin, adminCreateValidate };
+function adminUpdateValidate(customer) {
+    const schema = Joi.object({
+        firstName: Joi.string().min(2).max(50),
+        lastName: Joi.string().min(2).max(50),
+        phoneNumber: Joi.string().pattern(/^\d{11}$/),
+        email: Joi.string().email(),
+        password: Joi.string().pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%^*?&])[A-Za-z\d@$!%^*?&]{8,}$/),
+        roleId: Joi.number().integer()
+    });
+    return schema.validate(customer);
+}
+
+module.exports = { Admin, adminCreateValidate, adminUpdateValidate };
