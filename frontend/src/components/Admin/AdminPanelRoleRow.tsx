@@ -49,7 +49,7 @@ interface Role {
 	permissions: Permission[];
 }
 
-const AdminPanelUserRow = ({role}: Props) => {
+const AdminPanelRoleRow = ({role}: Props) => {
 	const [resetFlag, setResetFlag] = useState(false);
 	const [grantedPermissions, setGrantedPermissions] = useState<Permission[]>(
 		[]
@@ -81,22 +81,25 @@ const AdminPanelUserRow = ({role}: Props) => {
 		setGrantedPermissions([...grantedPermissions, permission]);
 	};
 
-	const [isTouched, setTouched] = useState(false);
 	const [editedRole, setEditedRole] = useState<Role>(role);
+
+	const isTouched =
+		!_.isEqual(
+			_.keys(role.permissions).sort(),
+			_.keys(grantedPermissions).sort()
+		) || role.name !== editedRole.name;
 
 	const {
 		isOpen: alertDialogIsOpen,
 		onOpen: alertDialogOnOpen,
 		onClose: alertDialogOnClose,
 	} = useDisclosure();
-	const cancelRef = useRef<HTMLButtonElement>(null);
 
 	const {
 		isOpen: modalIsOpen,
 		onOpen: modalOnOpen,
 		onClose: modalOnClose,
 	} = useDisclosure();
-	const finalRef = useRef<HTMLButtonElement>(null);
 
 	const {id, name} = editedRole;
 
@@ -119,7 +122,6 @@ const AdminPanelUserRow = ({role}: Props) => {
 						<EditablePreview />
 						<EditableInput
 							onChange={(e) => {
-								setTouched(true);
 								setEditedRole({
 									...editedRole,
 									name: e.currentTarget.value,
@@ -175,136 +177,185 @@ const AdminPanelUserRow = ({role}: Props) => {
 					/>
 				</Td>
 			</Tr>
-			<AlertDialog
+			<DeleteDialog
 				isOpen={alertDialogIsOpen}
-				leastDestructiveRef={cancelRef}
 				onClose={alertDialogOnClose}
-			>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogHeader fontSize="lg" fontWeight="bold">
-							حذف نقش
-						</AlertDialogHeader>
-
-						<AlertDialogBody>
-							آیا از حذف این نقش مطمئن هستید؟ این کار غیر قابل بازگشت است!
-						</AlertDialogBody>
-
-						<AlertDialogFooter>
-							<Button ref={cancelRef} onClick={alertDialogOnClose}>
-								لغو
-							</Button>
-							<Button
-								colorScheme="red"
-								onClick={() => {
-									handleDelete();
-									alertDialogOnClose();
-								}}
-								mr={3}
-							>
-								حذف
-							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
-			<Modal
-				finalFocusRef={finalRef}
+				handleDelete={handleDelete}
+			/>
+			<PermissionsModal
 				isOpen={modalIsOpen}
 				onClose={modalOnClose}
-			>
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader>ویرایش دسترسی ها</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody>
-						<VStack textAlign="center">
-							<Text fontSize="smaller">
-								با کلیک بر روی دسترسی ها می توانید آن ها را به چپ یا راست منتقل
-								کنید
-							</Text>
-							<HStack mt={5}>
-								<VStack>
-									<Heading as="h3" fontSize="sm">
-										دسترسی های اعطا شده
-									</Heading>
-									<Box
-										height="280px"
-										w="200px"
-										maxW="200px"
-										borderStyle="solid"
-										borderColor="gray.300"
-										borderWidth={2}
-										borderRadius={10}
-										p={5}
-										overflow="auto"
-									>
-										{grantedPermissions.map((p) => (
-											<Badge
-												cursor="pointer"
-												userSelect="none"
-												key={p.id}
-												p={1}
-												rounded="full"
-												mx={3}
-												my={1}
-												onClick={() => handleGrantedPermissionClick(p)}
-											>
-												<Text as="span">{p.name}</Text>
-											</Badge>
-										))}
-									</Box>
-								</VStack>
-								<VStack>
-									<Heading as="h3" fontSize="sm">
-										دسترسی های قابل اعطا
-									</Heading>
-									<Box
-										height="280px"
-										w="200px"
-										maxW="200px"
-										borderStyle="solid"
-										borderColor="gray.300"
-										borderWidth={2}
-										borderRadius={10}
-										p={5}
-										overflow="auto"
-									>
-										{availablePermissions.map((p) => (
-											<Badge
-												cursor="pointer"
-												userSelect="none"
-												key={p.id}
-												p={1}
-												rounded="full"
-												mx={3}
-												my={1}
-												onClick={() => handleAvailablePermissionClick(p)}
-											>
-												<Text as="span">{p.name}</Text>
-											</Badge>
-										))}
-									</Box>
-								</VStack>
-							</HStack>
-						</VStack>
-					</ModalBody>
-
-					<ModalFooter>
-						<Button colorScheme="blue" ml={3} onClick={modalOnClose}>
-							بستن
-						</Button>
-						<Button variant="ghost" onClick={() => setResetFlag(!resetFlag)}>
-							بازنشانی
-						</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal>
+				grantedPermissions={grantedPermissions}
+				handleGrantedPermissionClick={handleGrantedPermissionClick}
+				availablePermissions={availablePermissions}
+				handleAvailablePermissionClick={handleAvailablePermissionClick}
+				setResetFlag={setResetFlag}
+				resetFlag={resetFlag}
+			/>
 		</>
 	);
 };
 
-export default AdminPanelUserRow;
+export default AdminPanelRoleRow;
+
+interface DeleteDialogProps {
+	isOpen: boolean;
+	onClose: () => void;
+	handleDelete: () => void;
+}
+
+function DeleteDialog({isOpen, onClose, handleDelete}: DeleteDialogProps) {
+	const cancelRef = useRef<HTMLButtonElement>(null);
+	return (
+		<AlertDialog
+			isOpen={isOpen}
+			leastDestructiveRef={cancelRef}
+			onClose={onClose}
+		>
+			<AlertDialogOverlay>
+				<AlertDialogContent>
+					<AlertDialogHeader fontSize="lg" fontWeight="bold">
+						حذف نقش
+					</AlertDialogHeader>
+
+					<AlertDialogBody>
+						آیا از حذف این نقش مطمئن هستید؟ این کار غیر قابل بازگشت است!
+					</AlertDialogBody>
+
+					<AlertDialogFooter>
+						<Button ref={cancelRef} onClick={onClose}>
+							لغو
+						</Button>
+						<Button
+							colorScheme="red"
+							onClick={() => {
+								handleDelete();
+								onClose();
+							}}
+							mr={3}
+						>
+							حذف
+						</Button>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialogOverlay>
+		</AlertDialog>
+	);
+}
+
+interface PermissionsModalProps {
+	isOpen: boolean;
+	onClose: () => void;
+	grantedPermissions: Permission[];
+	handleGrantedPermissionClick: (permission: Permission) => void;
+	availablePermissions: Permission[];
+	handleAvailablePermissionClick: (permission: Permission) => void;
+	setResetFlag: React.Dispatch<React.SetStateAction<boolean>>;
+	resetFlag: boolean;
+}
+
+function PermissionsModal({
+	isOpen,
+	onClose,
+	grantedPermissions,
+	handleGrantedPermissionClick,
+	availablePermissions,
+	handleAvailablePermissionClick,
+	setResetFlag,
+	resetFlag,
+}: PermissionsModalProps) {
+	const finalRef = useRef<HTMLButtonElement>(null);
+	return (
+		<Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
+			<ModalOverlay />
+			<ModalContent>
+				<ModalHeader>ویرایش دسترسی ها</ModalHeader>
+				<ModalCloseButton />
+				<ModalBody>
+					<VStack textAlign="center">
+						<Text fontSize="smaller">
+							با کلیک بر روی دسترسی ها می توانید آن ها را به چپ یا راست منتقل
+							کنید
+						</Text>
+						<HStack mt={5}>
+							<VStack>
+								<Heading as="h3" fontSize="sm">
+									دسترسی های اعطا شده
+								</Heading>
+								<Box
+									height="280px"
+									w="200px"
+									maxW="200px"
+									borderStyle="solid"
+									borderColor="gray.300"
+									borderWidth={2}
+									borderRadius={10}
+									p={5}
+									overflow="auto"
+								>
+									{grantedPermissions.map((p) => (
+										<Badge
+											cursor="pointer"
+											userSelect="none"
+											key={p.id}
+											p={1}
+											rounded="full"
+											mx={3}
+											my={1}
+											onClick={() => handleGrantedPermissionClick(p)}
+										>
+											<Text as="span">{p.name}</Text>
+										</Badge>
+									))}
+								</Box>
+							</VStack>
+							<VStack>
+								<Heading as="h3" fontSize="sm">
+									دسترسی های قابل اعطا
+								</Heading>
+								<Box
+									height="280px"
+									w="200px"
+									maxW="200px"
+									borderStyle="solid"
+									borderColor="gray.300"
+									borderWidth={2}
+									borderRadius={10}
+									p={5}
+									overflow="auto"
+								>
+									{availablePermissions.map((p) => (
+										<Badge
+											cursor="pointer"
+											userSelect="none"
+											key={p.id}
+											p={1}
+											rounded="full"
+											mx={3}
+											my={1}
+											onClick={() => handleAvailablePermissionClick(p)}
+										>
+											<Text as="span">{p.name}</Text>
+										</Badge>
+									))}
+								</Box>
+							</VStack>
+						</HStack>
+					</VStack>
+				</ModalBody>
+
+				<ModalFooter>
+					<Button colorScheme="blue" ml={3} onClick={onClose}>
+						بستن
+					</Button>
+					<Button variant="ghost" onClick={() => setResetFlag(!resetFlag)}>
+						بازنشانی
+					</Button>
+				</ModalFooter>
+			</ModalContent>
+		</Modal>
+	);
+}
 
 const SAMPLE_PERMISSIONS: Permission[] = [
 	{
