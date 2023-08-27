@@ -35,11 +35,9 @@ interface User {
 }
 
 const AdminPanelUserRow = ({user}: Props) => {
-	const [isTouched, setTouched] = useState(false);
 	const [editedUser, setEditedUser] = useState<User>(user);
 
 	const {isOpen, onOpen, onClose} = useDisclosure();
-	const cancelRef = useRef<HTMLButtonElement>(null);
 
 	const {
 		id,
@@ -50,6 +48,8 @@ const AdminPanelUserRow = ({user}: Props) => {
 		phoneNumberIsVerified,
 		emailIsVerified,
 	} = editedUser;
+
+	const isTouched = !_.isEqual(editedUser, user);
 
 	const handleEdit = () => {
 		const userToSend = _.pick(editedUser, [
@@ -75,7 +75,6 @@ const AdminPanelUserRow = ({user}: Props) => {
 						<EditablePreview />
 						<EditableInput
 							onChange={(e) => {
-								setTouched(true);
 								setEditedUser({
 									...editedUser,
 									firstName: e.currentTarget.value,
@@ -91,7 +90,6 @@ const AdminPanelUserRow = ({user}: Props) => {
 						<EditablePreview />
 						<EditableInput
 							onChange={(e) => {
-								setTouched(true);
 								setEditedUser({...editedUser, lastName: e.currentTarget.value});
 							}}
 							value={lastName}
@@ -105,7 +103,6 @@ const AdminPanelUserRow = ({user}: Props) => {
 							<EditablePreview />
 							<EditableInput
 								onChange={(e) => {
-									setTouched(true);
 									setEditedUser({...editedUser, email: e.currentTarget.value});
 								}}
 								value={email}
@@ -123,7 +120,6 @@ const AdminPanelUserRow = ({user}: Props) => {
 							<EditablePreview />
 							<EditableInput
 								onChange={(e) => {
-									setTouched(true);
 									setEditedUser({
 										...editedUser,
 										phoneNumber: e.currentTarget.value,
@@ -158,41 +154,58 @@ const AdminPanelUserRow = ({user}: Props) => {
 					/>
 				</Td>
 			</Tr>
-			<AlertDialog
+			<DeleteDialog
 				isOpen={isOpen}
-				leastDestructiveRef={cancelRef}
 				onClose={onClose}
-			>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogHeader fontSize="lg" fontWeight="bold">
-							حذف کاربر
-						</AlertDialogHeader>
-
-						<AlertDialogBody>
-							آیا از حذف این کاربر مطمئن هستید؟ این کار غیر قابل بازگشت است!
-						</AlertDialogBody>
-
-						<AlertDialogFooter>
-							<Button ref={cancelRef} onClick={onClose}>
-								لغو
-							</Button>
-							<Button
-								colorScheme="red"
-								onClick={() => {
-									handleDelete();
-									onClose();
-								}}
-								mr={3}
-							>
-								حذف
-							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+				handleDelete={handleDelete}
+			/>
 		</>
 	);
 };
 
 export default AdminPanelUserRow;
+
+interface AlertDialogProps {
+	isOpen: boolean;
+	onClose: () => void;
+	handleDelete: () => void;
+}
+
+function DeleteDialog({isOpen, onClose, handleDelete}: AlertDialogProps) {
+	const cancelRef = useRef<HTMLButtonElement>(null);
+	return (
+		<AlertDialog
+			isOpen={isOpen}
+			leastDestructiveRef={cancelRef}
+			onClose={onClose}
+		>
+			<AlertDialogOverlay>
+				<AlertDialogContent>
+					<AlertDialogHeader fontSize="lg" fontWeight="bold">
+						حذف کاربر
+					</AlertDialogHeader>
+
+					<AlertDialogBody>
+						آیا از حذف این کاربر مطمئن هستید؟ این کار غیر قابل بازگشت است!
+					</AlertDialogBody>
+
+					<AlertDialogFooter>
+						<Button ref={cancelRef} onClick={onClose}>
+							لغو
+						</Button>
+						<Button
+							colorScheme="red"
+							onClick={() => {
+								handleDelete();
+								onClose();
+							}}
+							mr={3}
+						>
+							حذف
+						</Button>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialogOverlay>
+		</AlertDialog>
+	);
+}
