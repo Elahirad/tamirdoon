@@ -29,7 +29,7 @@ router.post('/create', async (req, res) => { // needs middleware to do this
 router.put('/:id', async (req, res) => {
     const {error} = roleUpdateValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
-    console.log(req.params.id);
+
     let role = await Role.findByPk(req.params.id)
     if (!role) return res.status(400).send("Role doesn't exist.");
 
