@@ -2,6 +2,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const test = require('../routes/test');
 const customers = require('../routes/customers');
+const admins = require('../routes/admins/admins');
 const permissions = require('../routes/admins/permissions');
 const roles = require('../routes/admins/roles');
 const oauth = require('../routes/oauth');
@@ -20,6 +21,7 @@ module.exports = function (app) {
 	app.use('/api/oauth', oauth);
     app.use('/api/permissions', permissions);
     app.use('/api/roles', roles);
+    app.use('/api/admins', admins);
 	// other routes
 	app.use(error);
 };
