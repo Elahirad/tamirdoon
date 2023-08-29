@@ -49,8 +49,8 @@ Admin.belongsTo(User, {foreignKey: 'userId'});
 
 Admin.beforeCreate(async (admin) => {
     try {
-        const client = await Client.create();
-        admin.ClientId = client.id;
+        const user = await User.create();
+        admin.userId = user.id;
     } catch (error) {
         throw new Error("Error creating user for admin");
     }
