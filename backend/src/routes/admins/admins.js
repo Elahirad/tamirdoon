@@ -7,6 +7,25 @@ const bcrypt = require("bcrypt");
 const {Role} = require("../../models/role");
 const User = require('../../models/user');
 
+router.get('/', async (req, res) => {
+    const page = parseInt(req.body.page) || 1;
+    const perPage = parseInt(req.body.perPage) || 10;
+
+    const { count, admins } = await Admin .findAndCountAll({
+        where: { /* searching logic */ },
+        limit: (page - 1) * perPage,
+        offset: perPage
+    });
+
+    res.json({
+        totalAdmins: count,
+        totalPages: Math.ceil(count / perPage),
+        currentPage: page,
+        adminsPerPage: perPage,
+        admins: admins,
+    });
+});
+
 router.post('/create', async (req, res)=> {
     const {error} = adminCreateValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
