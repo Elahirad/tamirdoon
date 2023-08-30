@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Admin, adminCreateValidate, adminUpdateValidate } = require('../../models/admin');
+const { Admin, adminCreateValidate, adminUpdateValidate, adminSignInValidate} = require('../../models/admin');
 const {Op} = require("sequelize");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
@@ -58,6 +58,29 @@ router.post('/create', async (req, res)=> {
 
     res.send(_.pick(admin, ["id", "firstName", "lastName", "email", "phoneNumber"]));
 });
+
+router.post('/sign-in', async (res, req) => {
+    const {error} = adminSignInValidate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const admin = await Admin.findOne({
+        where: {
+            [Op.or]: [
+                {email: req.body.username},
+                {phoneNumber: req.body.username},
+            ],
+        },
+    });
+
+    if (!admin) return res.status(400).send("Invalid email or password.");
+
+    const validPassword = await bcrypt.compare(req.body.password, admin.password);
+    if (!validPassword) return res.status(400).send("Invalid email or password.");
+
+    admin.generateAuthToken(req, res);
+
+    res.send(_.pick(admin, ["id", "firstName", "lastName", "email", "phoneNumber"]));
+})
 
 router.put('/:id', async (req, res) => {
     const {error} = adminUpdateValidate(req.body);
