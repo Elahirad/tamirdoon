@@ -1,20 +1,33 @@
 const express = require('express');
 const router = express.Router();
-const { Admin, adminCreateValidate, adminUpdateValidate, adminSignInValidate} = require('../../models/admin');
+const { Admin, adminCreateValidate, adminUpdateValidate,
+            adminSignInValidate, adminSearchValidate} = require('../../models/admin');
+const adminAuth = require('../../middlewares/adminAuth');
 const {Op} = require("sequelize");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const {Role} = require("../../models/role");
 const User = require('../../models/user');
 
-router.get('/', async (req, res) => {
+
+router.get('/', adminAuth('ADMIN_READ'), async (req, res) => {
+    const {error} = adminSearchValidate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
     const page = parseInt(req.body.page) || 1;
     const perPage = parseInt(req.body.perPage) || 10;
 
-    const { count, admins } = await Admin .findAndCountAll({
-        where: { /* searching logic */ },
-        limit: (page - 1) * perPage,
-        offset: perPage
+    const searchConditions = {};
+    for(let property in req.body.query){
+        if(req.body.query[property]){
+            searchConditions[property] = req.body.query[property]
+        }
+    }
+
+    const { count, rows } = await Admin.findAndCountAll({
+        where: searchConditions,
+        limit: perPage,
+        offset: (page - 1) * perPage
     });
 
     res.json({
@@ -22,7 +35,7 @@ router.get('/', async (req, res) => {
         totalPages: Math.ceil(count / perPage),
         currentPage: page,
         adminsPerPage: perPage,
-        admins: admins,
+        admins: rows,
     });
 });
 
@@ -53,13 +66,16 @@ router.post('/create', async (req, res)=> {
     admin.password = await bcrypt.hash(admin.password, salt);
     await admin.save();
 
-    if(req.body.roleId)
-        await admin.addRole(await Role.findByPk(req.body.roleId))
+    if(req.body.roleId){
+        const role = await Role.findByPk(req.body.roleId);
+        if(!role) return res.status(400).send("role doesn't exist.");
+        await admin.addRole(role);
+    }
 
     res.send(_.pick(admin, ["id", "firstName", "lastName", "email", "phoneNumber"]));
 });
 
-router.post('/sign-in', async (res, req) => {
+router.post('/sign-in', async (req, res) => {
     const {error} = adminSignInValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
