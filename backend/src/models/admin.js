@@ -109,4 +109,19 @@ function adminUpdateValidate(admin) {
     return schema.validate(admin);
 }
 
-module.exports = { Admin, adminCreateValidate, adminUpdateValidate, adminSignInValidate };
+function adminSearchValidate(admin){
+    const schema = Joi.object({
+        page: Joi.number().min(0),
+        perPage: Joi.number().min(0),
+        query: {
+            firstName: Joi.string().min(2).max(50),
+            lastName: Joi.string().min(2).max(50),
+            phoneNumber: Joi.string().pattern(/^\d{11}$/),
+            email: Joi.string().email(),
+            roleId: Joi.number().integer()
+        }
+    });
+    return schema.validate(admin);
+}
+
+module.exports = { Admin, adminCreateValidate, adminUpdateValidate, adminSignInValidate, adminSearchValidate};
