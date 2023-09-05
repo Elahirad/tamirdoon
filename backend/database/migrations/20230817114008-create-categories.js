@@ -24,6 +24,12 @@ module.exports = {
 
         await queryInterface.bulkInsert('permissions', [
             {
+                name: 'ایجاد دسته بندی ها',
+                code: 'CATEGORY_CREATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
                 name: 'مشاهده دسته بندی ها',
                 code: 'CATEGORY_READ',
                 createdAt: new Date(),
