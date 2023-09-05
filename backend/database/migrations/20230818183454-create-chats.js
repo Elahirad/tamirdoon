@@ -55,6 +55,12 @@ module.exports = {
 
         await queryInterface.bulkInsert('permissions', [
             {
+                name: 'ایجاد چت ها',
+                code: 'CHAT_CREATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
                 name: 'مشاهده چت ها',
                 code: 'CHAT_READ',
                 createdAt: new Date(),

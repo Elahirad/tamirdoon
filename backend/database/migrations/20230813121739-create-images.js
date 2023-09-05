@@ -28,6 +28,12 @@ module.exports = {
 
         await queryInterface.bulkInsert('permissions', [
             {
+                name: 'ایجاد عکس ها',
+                code: 'IMAGE_CREATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
                 name: 'مشاهده عکس ها',
                 code: 'IMAGE_READ',
                 createdAt: new Date(),

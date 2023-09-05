@@ -24,22 +24,28 @@ module.exports = {
         await queryInterface.bulkInsert('rolePermissions', [
             {
                 roleId: roleId,
-                permissionId: 40,
+                permissionId: 53,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
             {
                 roleId: roleId,
-                permissionId: 41,
+                permissionId: 54,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
             {
                 roleId: roleId,
-                permissionId: 42,
+                permissionId: 55,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
+            {
+                roleId: roleId,
+                permissionId: 56,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            }
         ]);
 
         const firstAdminId = await queryInterface.bulkInsert('admins', [

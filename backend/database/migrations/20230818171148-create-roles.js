@@ -24,6 +24,12 @@ module.exports = {
 
         await queryInterface.bulkInsert('permissions', [
             {
+                name: 'ایجاد نقش ادمین ها',
+                code: 'ROLE_CREATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
                 name: 'مشاهده نقش ادمین ها',
                 code: 'ROLE_READ',
                 createdAt: new Date(),
