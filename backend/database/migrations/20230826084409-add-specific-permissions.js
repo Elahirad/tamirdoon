@@ -9,7 +9,7 @@ module.exports = {
             },
             {
                 name: 'مشاهده همه',
-                code: 'All_READ',
+                code: 'ALL_READ',
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
