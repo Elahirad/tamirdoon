@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { Admin, adminCreateValidate, adminUpdateValidate,
-            adminSignInValidate, adminSearchValidate} = require('../../models/admin');
+    adminSignInValidate, adminSearchValidate} = require('../../models/admin');
+const {Role} = require("../../models/role");
+const User = require('../../models/user');
 const adminAuth = require('../../middlewares/adminAuth');
 const {Op} = require("sequelize");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
-const {Role} = require("../../models/role");
-const User = require('../../models/user');
 
 
 router.get('/', adminAuth('ADMIN_READ'), async (req, res) => {
@@ -39,7 +39,7 @@ router.get('/', adminAuth('ADMIN_READ'), async (req, res) => {
     });
 });
 
-router.post('/create', async (req, res)=> {
+router.post('/create', adminAuth('ADMIN_CREATE'),async (req, res)=> {
     const {error} = adminCreateValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -75,7 +75,7 @@ router.post('/create', async (req, res)=> {
     res.send(_.pick(admin, ["id", "firstName", "lastName", "email", "phoneNumber"]));
 });
 
-router.post('/sign-in', async (req, res) => {
+router.post('/sign-in',async (req, res) => {
     const {error} = adminSignInValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -98,7 +98,7 @@ router.post('/sign-in', async (req, res) => {
     res.send(_.pick(admin, ["id", "firstName", "lastName", "email", "phoneNumber"]));
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', adminAuth('ADMIN_UPDATE'),async (req, res) => {
     const {error} = adminUpdateValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -118,25 +118,28 @@ router.put('/:id', async (req, res) => {
             const role = await Role.findByPk(req.body.roleId)
             if(!role)
                 return res.status(400).send("role doesn't exist.");
-            const adminRole = await admin.getRoles()[0];
-            if(adminRole.id === req.body.roleId)
-                return res.status(400).send("admin already has the role.");
+            const adminRoles = await admin.getRoles();
+            const adminRole = adminRoles[0];
+            if(adminRole)
+                return res.status(400).send("admin already has a role.");
+            // if(adminRole.id === req.body.roleId)
+            //     return res.status(400).send("admin already has the role.");
             else
                 await admin.addRole(req.body.roleId);
         }
         else {
-            const adminRole = await admin.getRoles()[0];
+            const adminRoles = await admin.getRoles();
+            const adminRole = adminRoles[0];
             if(!adminRole)
                 return res.status(400).send("admin doesn't have role.");
-            await admin.removeRole(adminRole);
+            await admin.removeRole(adminRole.id);
         }
     }
-
     await admin.save();
     res.send(admin);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', adminAuth('ADMIN_DELETE'), async (req, res) => {
     const admin = await Admin.findByPk(req.params.id);
     if(!admin) return res.status(400).send("admin doesn't exist.");
 
