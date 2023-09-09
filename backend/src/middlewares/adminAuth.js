@@ -12,7 +12,7 @@ module.exports = function (permission){
 
         jwt.verify(token, config.get('jwtPrivateKey'), async (err, admin) => {
             if (err) {
-
+                return res.sendStatus(403); // Forbidden
             }
             req.admin = admin;
 
