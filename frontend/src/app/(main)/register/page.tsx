@@ -68,7 +68,7 @@ export default function Page() {
 			(e) => e !== ''
 		);
 		apiClient
-			.post('/users/sign-up', {
+			.post('/customers/sign-up', {
 				firstName,
 				lastName,
 				email,
