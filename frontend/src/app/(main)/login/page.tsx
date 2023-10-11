@@ -51,7 +51,7 @@ export default function Page() {
 	) => {
 		const {username, password, remember} = values;
 		apiClient
-			.post('/users/sign-in', {
+			.post('/customers/sign-in', {
 				username,
 				password,
 				remember,
