@@ -53,6 +53,12 @@ module.exports = {
 
         await queryInterface.bulkInsert('permissions', [
             {
+                name: 'ایجاد آگهی ها',
+                code: 'AD_CREATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
                 name: 'مشاهده آگهی ها',
                 code: 'AD_READ',
                 createdAt: new Date(),

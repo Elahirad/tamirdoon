@@ -47,6 +47,12 @@ module.exports = {
 
         await queryInterface.bulkInsert('permissions', [
             {
+                name: 'ایجاد پیشنهاد ها',
+                code: 'ADOFFER_CREATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
                 name: 'مشاهده پیشنهاد ها',
                 code: 'ADOFFER_READ',
                 createdAt: new Date(),
