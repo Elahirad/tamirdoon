@@ -59,7 +59,7 @@ export default function Navbar() {
 
 	const logoutHandler = () => {
 		apiClient
-			.get('users/sign-out')
+			.get('customers/sign-out')
 			.then(() => {
 				updateLogin();
 				infoToast('خروج موفق !', 'با موفقیت از حساب کاربری خود خارج شدید.');

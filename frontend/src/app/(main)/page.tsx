@@ -1,3 +1,5 @@
+import {Text} from '../../Chakra';
+
 export default function Page() {
-	return <p>این صفحه اصلی است</p>;
+	return <Text>این صفحه اصلی است</Text>;
 }

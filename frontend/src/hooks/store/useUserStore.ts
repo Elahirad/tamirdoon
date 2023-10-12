@@ -17,7 +17,7 @@ const useUserStore = create<UserStore>((set) => ({
 	user: null,
 	updateLogin: async () => {
 		apiClient
-			.get('users/current-user')
+			.get('customers/current-user')
 			.then((res) => {
 				if (res.status === 200) set(() => ({user: res.data}));
 				else set(() => ({user: null}));
