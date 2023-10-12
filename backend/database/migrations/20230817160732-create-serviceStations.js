@@ -34,6 +34,12 @@ module.exports = {
 
         await queryInterface.bulkInsert('permissions', [
             {
+                name: 'ایجاد مراکز خدمات',
+                code: 'SERVICESTATION_CREATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
                 name: 'مشاهده مراکز خدمات',
                 code: 'SERVICESTATION_READ',
                 createdAt: new Date(),

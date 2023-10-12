@@ -59,6 +59,12 @@ module.exports = {
 
         await queryInterface.bulkInsert('permissions', [
             {
+                name: 'ایجاد نظرات',
+                code: 'COMMENT_CREATE',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
                 name: 'مشاهده نظرات',
                 code: 'COMMENT_READ',
                 createdAt: new Date(),
