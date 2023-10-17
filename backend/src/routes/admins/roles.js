@@ -1,10 +1,21 @@
 const express = require('express');
+const _ = require('lodash');
 const router = express.Router();
 const { Role, roleCreateValidate, roleUpdateValidate } = require('../../models/role');
 const {Permission} = require("../../models/permission");
 
 router.get('/', async (req, res) => {
     res.send(await Role.findAll());
+});
+
+router.get('/:id', async (req, res) => {
+    const role = await Role.findByPk(req.params.id);
+    const permissions = await role.getPermissions({ joinTableAttributes: [] });
+
+    res.json({
+        role: role,
+        permissions: permissions
+    });
 });
 
 router.post('/create', async (req, res) => { // needs middleware to do this
