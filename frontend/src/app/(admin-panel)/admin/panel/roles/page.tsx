@@ -1,7 +1,10 @@
 'use client';
 import {
+	Button,
+	HStack,
 	Heading,
 	Icon,
+	Input,
 	Table,
 	TableContainer,
 	Tbody,
@@ -13,13 +16,59 @@ import {
 import {BiEditAlt} from 'react-icons/bi';
 import {MdDelete} from 'react-icons/md';
 import AdminPanelRoleRow from '@/components/Admin/AdminPanelRoleRow';
+import {useEffect, useState} from 'react';
+import apiClient from '@/services/apiClient';
+import useErrorToast from '@/hooks/useErrorToast';
+
+interface Permission {
+	id: number;
+	code: string;
+	name: string;
+}
+
+interface Role {
+	id: number;
+	name: string;
+	permissions: Permission[];
+}
 
 export default function Page() {
+	const errorToast = useErrorToast();
+	const [roles, setRoles] = useState<Role[]>([]);
+	const [inputIsOpen, setInputIsOpen] = useState(false);
+	useEffect(() => {
+		apiClient
+			.get<Role[]>('/roles')
+			.then((res) => {
+				const data = res.data.map((r) =>
+					!r.permissions ? {...r, permissions: []} : r
+				);
+				setRoles(data);
+			})
+			.catch(() => errorToast('خطایی رخ داد'));
+	}, []);
 	return (
 		<VStack width="100%" align="flex-start">
 			<Heading as="h2" mt={5} mr={3}>
 				مدیریت نقش ها
 			</Heading>
+			{!inputIsOpen && (
+				<Button colorScheme="blackAlpha" onClick={() => setInputIsOpen(true)}>
+					افزودن نقش
+				</Button>
+			)}
+
+			{inputIsOpen && (
+				<HStack>
+					<Input variant="filled" placeholder="نام" />
+					<Button colorScheme="green" onClick={() => setInputIsOpen(true)}>
+						ثبت
+					</Button>
+					<Button colorScheme="red" onClick={() => setInputIsOpen(false)}>
+						بازگشت
+					</Button>
+				</HStack>
+			)}
 			<TableContainer width="100%" p={10}>
 				<Table variant="simple">
 					<Thead>
@@ -36,7 +85,7 @@ export default function Page() {
 						</Tr>
 					</Thead>
 					<Tbody>
-						{SAMPLE_ROLES.map((r) => (
+						{roles.map((r) => (
 							<AdminPanelRoleRow key={r.id} role={r} />
 						))}
 					</Tbody>
@@ -45,70 +94,3 @@ export default function Page() {
 		</VStack>
 	);
 }
-
-interface Permission {
-	id: number;
-	code: string;
-	name: string;
-}
-
-interface Role {
-	id: number;
-	name: string;
-	permissions: Permission[];
-}
-
-const SAMPLE_ROLES: Role[] = [
-	{
-		id: 1,
-		name: 'ادمین پشتیبانی',
-		permissions: [
-			{
-				id: 1,
-				code: 'USER_READ',
-				name: 'خواندن کاربران',
-			},
-			{
-				id: 2,
-				code: 'USER_UPDATE',
-				name: 'ویرایش کاربران',
-			},
-			{
-				id: 3,
-				code: 'USER_DELETE',
-				name: 'حذف کاربران',
-			},
-			{
-				id: 4,
-				code: 'CHAT_READ',
-				name: 'خواندن چت ها',
-			},
-			{
-				id: 5,
-				code: 'CHAT_UPDATE',
-				name: 'ویرایش چت ها',
-			},
-		],
-	},
-	{
-		id: 2,
-		name: 'ادمین چت ها',
-		permissions: [
-			{
-				id: 4,
-				code: 'CHAT_READ',
-				name: 'خواندن چت ها',
-			},
-			{
-				id: 5,
-				code: 'CHAT_UPDATE',
-				name: 'ویرایش چت ها',
-			},
-			{
-				id: 6,
-				code: 'CHAT_DELETE',
-				name: 'حذف چت ها',
-			},
-		],
-	},
-];

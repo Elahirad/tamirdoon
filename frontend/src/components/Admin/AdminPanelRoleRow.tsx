@@ -32,6 +32,7 @@ import _ from 'lodash';
 import React, {useEffect, useRef, useState} from 'react';
 import {MdDone, MdDelete} from 'react-icons/md';
 import {BsWrenchAdjustable} from 'react-icons/bs';
+import apiClient from '@/services/apiClient';
 
 interface Props {
 	role: Role;
@@ -59,11 +60,15 @@ const AdminPanelRoleRow = ({role}: Props) => {
 	>([]);
 
 	useEffect(() => {
-		setAvailablePermissions(
-			SAMPLE_PERMISSIONS.filter(
-				(p) => !role.permissions.map((gP) => gP.id).includes(p.id)
-			)
-		);
+		apiClient
+			.get<Permission[]>('/permissions')
+			.then((res) =>
+				setAvailablePermissions(
+					res.data.filter(
+						(p) => !role.permissions.map((gP) => gP.id).includes(p.id)
+					)
+				)
+			);
 		setGrantedPermissions(role.permissions);
 	}, [resetFlag]);
 
@@ -268,7 +273,7 @@ function PermissionsModal({
 	return (
 		<Modal finalFocusRef={finalRef} isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
-			<ModalContent>
+			<ModalContent w="600px">
 				<ModalHeader>ویرایش دسترسی ها</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody>
@@ -284,8 +289,8 @@ function PermissionsModal({
 								</Heading>
 								<Box
 									height="280px"
-									w="200px"
-									maxW="200px"
+									w="220px"
+									maxW="220px"
 									borderStyle="solid"
 									borderColor="gray.300"
 									borderWidth={2}
@@ -315,8 +320,8 @@ function PermissionsModal({
 								</Heading>
 								<Box
 									height="280px"
-									w="200px"
-									maxW="200px"
+									w="220px"
+									maxW="220px"
 									borderStyle="solid"
 									borderColor="gray.300"
 									borderWidth={2}
@@ -356,36 +361,3 @@ function PermissionsModal({
 		</Modal>
 	);
 }
-
-const SAMPLE_PERMISSIONS: Permission[] = [
-	{
-		id: 1,
-		code: 'USER_READ',
-		name: 'خواندن کاربران',
-	},
-	{
-		id: 2,
-		code: 'USER_UPDATE',
-		name: 'ویرایش کاربران',
-	},
-	{
-		id: 3,
-		code: 'USER_DELETE',
-		name: 'حذف کاربران',
-	},
-	{
-		id: 4,
-		code: 'CHAT_READ',
-		name: 'خواندن چت ها',
-	},
-	{
-		id: 5,
-		code: 'CHAT_UPDATE',
-		name: 'ویرایش چت ها',
-	},
-	{
-		id: 6,
-		code: 'CHAT_DELETE',
-		name: 'حذف چت ها',
-	},
-];
