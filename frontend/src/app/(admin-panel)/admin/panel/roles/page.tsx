@@ -16,9 +16,10 @@ import {
 import {BiEditAlt} from 'react-icons/bi';
 import {MdDelete} from 'react-icons/md';
 import AdminPanelRoleRow from '@/components/Admin/AdminPanelRoleRow';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import apiClient from '@/services/apiClient';
 import useErrorToast from '@/hooks/useErrorToast';
+import useSuccessToast from '@/hooks/useSuccessToast';
 
 interface Permission {
 	id: number;
@@ -36,6 +37,27 @@ export default function Page() {
 	const errorToast = useErrorToast();
 	const [roles, setRoles] = useState<Role[]>([]);
 	const [inputIsOpen, setInputIsOpen] = useState(false);
+	const nameRef = useRef<HTMLInputElement>(null);
+	const successToast = useSuccessToast();
+
+	const [refresh, setRefresh] = useState(false);
+
+	const handleCreation = () => {
+		apiClient
+			.post('/roles/create', {
+				name: nameRef.current?.value,
+				addPermissionIds: [],
+			})
+			.then(() => {
+				successToast('موفق !', 'نقش مورد نظر با موفقیت ایجاد شد.');
+				setRefresh(!refresh);
+				setInputIsOpen(false);
+			})
+			.catch(() => {
+				errorToast('خطایی رخ داد.');
+			});
+	};
+
 	useEffect(() => {
 		apiClient
 			.get<Role[]>('/roles')
@@ -46,7 +68,7 @@ export default function Page() {
 				setRoles(data);
 			})
 			.catch(() => errorToast('خطایی رخ داد'));
-	}, []);
+	}, [refresh]);
 	return (
 		<VStack width="100%" align="flex-start">
 			<Heading as="h2" mt={5} mr={3}>
@@ -60,8 +82,13 @@ export default function Page() {
 
 			{inputIsOpen && (
 				<HStack>
-					<Input variant="filled" placeholder="نام" />
-					<Button colorScheme="green" onClick={() => setInputIsOpen(true)}>
+					<Input
+						variant="filled"
+						placeholder="نام"
+						ref={nameRef}
+						value={nameRef.current?.value}
+					/>
+					<Button colorScheme="green" onClick={handleCreation}>
 						ثبت
 					</Button>
 					<Button colorScheme="red" onClick={() => setInputIsOpen(false)}>
