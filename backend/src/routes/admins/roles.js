@@ -1,13 +1,28 @@
 const express = require('express');
+const _ = require('lodash');
 const router = express.Router();
 const { Role, roleCreateValidate, roleUpdateValidate } = require('../../models/role');
 const {Permission} = require("../../models/permission");
+const req = require('express/lib/request');
+const adminAuth = require('../../middlewares/adminAuth');
 
-router.get('/', async (req, res) => {
+router.get('/', adminAuth('ROLE_READ'), async (req, res) => {
     res.send(await Role.findAll());
 });
 
-router.post('/create', async (req, res) => { // needs middleware to do this
+router.get('/:id', adminAuth('ROLE_READ'), async (req, res) => {
+    const role = await Role.findByPk(req.params.id);
+    if(!role) return res.status(400).send('no admin found');
+    
+    const permissions = await role.getPermissions({ joinTableAttributes: [] });
+
+    res.json({
+        role: role,
+        permissions: permissions
+    });
+});
+
+router.post('/create', adminAuth('ROLE_CREATE'), async (req, res) => { // needs middleware to do this
     const {error} = roleCreateValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -26,7 +41,7 @@ router.post('/create', async (req, res) => { // needs middleware to do this
     res.send(role);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', adminAuth('ROLE_UPDATE'), async (req, res) => {
     const {error} = roleUpdateValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -51,7 +66,7 @@ router.put('/:id', async (req, res) => {
     res.send(role);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', adminAuth('ROLE_DELETE'), async (req, res) => {
     const role = await Role.findByPk(req.params.id);
     if (!role) return res.status(400).send("Role doesn't exist.");
 

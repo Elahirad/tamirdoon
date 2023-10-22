@@ -39,6 +39,18 @@ router.get('/', adminAuth('ADMIN_READ'), async (req, res) => {
     });
 });
 
+router.get('/:id', adminAuth('ADMIN_READ'), async (req, res) => {
+    const admin = await Admin.findByPk(req.params.id, { attributes: { exclude: ['password'] }});
+    if(!admin) res.status(400).send('no admin found.');
+
+    const role = await admin.getRoles({ joinTableAttributes: [] });
+
+    res.json({
+        admin: admin,
+        role: role
+    });
+});
+
 router.post('/create', adminAuth('ADMIN_CREATE'),async (req, res)=> {
     const {error} = adminCreateValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);

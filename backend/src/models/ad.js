@@ -2,7 +2,7 @@ const {DataTypes} = require("sequelize");
 const {sequelize} = require("../../config/db.js");
 const {Customer} = require('./customer');
 const {Image} = require('./image');
-const Category = require('./category');
+const {Category} = require('./category');
 
 
 const Ad = sequelize.define('Ad', {
