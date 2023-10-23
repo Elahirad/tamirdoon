@@ -35,8 +35,15 @@ router.put('/:id', adminAuth('CATEGORY_UPDATE'), async(req, res) => {
     category.name = req.body.name;
 
     await category.save();
-
     res.send(category);
+});
+
+router.delete('/:id', adminAuth('CATEGORY_DELETE'), async (req, res) => {
+    const category = await Category.findByPk(req.params.id);
+    if (!category) return res.status(400).send("Category doesn't exist.");
+
+    await category.destroy();
+    res.send('deleted successfully!');
 });
 
 module.exports = router;
