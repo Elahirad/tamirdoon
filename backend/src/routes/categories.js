@@ -3,6 +3,12 @@ const router = express.Router();
 const adminAuth = require('../middlewares/adminAuth');
 const {Category, categoryValidate} = require('../models/category');
 
+router.get('/', adminAuth('CATEGORY_READ'), async(req, res) => {
+    const categories = await Category.findAll();
+
+    res.send(categories);
+});
+
 router.post('/', adminAuth('CATEGORY_CREATE'), async (req, res) => {
     const {error} = categoryValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -17,4 +23,4 @@ router.post('/', adminAuth('CATEGORY_CREATE'), async (req, res) => {
     });
 
     res.send(category);
-})
+});
