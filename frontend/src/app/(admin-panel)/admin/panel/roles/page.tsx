@@ -30,7 +30,7 @@ interface Permission {
 interface Role {
 	id: number;
 	name: string;
-	permissions: Permission[];
+	Permissions: Permission[];
 }
 
 export default function Page() {
@@ -61,12 +61,7 @@ export default function Page() {
 	useEffect(() => {
 		apiClient
 			.get<Role[]>('/roles')
-			.then((res) => {
-				const data = res.data.map((r) =>
-					!r.permissions ? {...r, permissions: []} : r
-				);
-				setRoles(data);
-			})
+			.then((res) => setRoles(res.data))
 			.catch(() => errorToast('خطایی رخ داد'));
 	}, [refresh]);
 	return (
@@ -113,7 +108,11 @@ export default function Page() {
 					</Thead>
 					<Tbody>
 						{roles.map((r) => (
-							<AdminPanelRoleRow key={r.id} role={r} />
+							<AdminPanelRoleRow
+								key={r.id}
+								role={r}
+								handleRefresh={() => setRefresh(!refresh)}
+							/>
 						))}
 					</Tbody>
 				</Table>

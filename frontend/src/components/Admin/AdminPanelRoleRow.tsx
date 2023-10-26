@@ -33,9 +33,12 @@ import React, {useEffect, useRef, useState} from 'react';
 import {MdDone, MdDelete} from 'react-icons/md';
 import {BsWrenchAdjustable} from 'react-icons/bs';
 import apiClient from '@/services/apiClient';
+import useSuccessToast from '@/hooks/useSuccessToast';
+import useErrorToast from '@/hooks/useErrorToast';
 
 interface Props {
 	role: Role;
+	handleRefresh: () => void;
 }
 
 interface Permission {
@@ -47,10 +50,10 @@ interface Permission {
 interface Role {
 	id: number;
 	name: string;
-	permissions: Permission[];
+	Permissions: Permission[];
 }
 
-const AdminPanelRoleRow = ({role}: Props) => {
+const AdminPanelRoleRow = ({role, handleRefresh}: Props) => {
 	const [resetFlag, setResetFlag] = useState(false);
 	const [grantedPermissions, setGrantedPermissions] = useState<Permission[]>(
 		[]
@@ -59,17 +62,20 @@ const AdminPanelRoleRow = ({role}: Props) => {
 		Permission[]
 	>([]);
 
+	const successToast = useSuccessToast();
+	const errorToast = useErrorToast();
+
 	useEffect(() => {
 		apiClient
 			.get<Permission[]>('/permissions')
 			.then((res) =>
 				setAvailablePermissions(
 					res.data.filter(
-						(p) => !role.permissions.map((gP) => gP.id).includes(p.id)
+						(p) => !role.Permissions.map((gP) => gP.id).includes(p.id)
 					)
 				)
 			);
-		setGrantedPermissions(role.permissions);
+		setGrantedPermissions(role.Permissions);
 	}, [resetFlag]);
 
 	const handleGrantedPermissionClick = (permission: Permission) => {
@@ -90,7 +96,7 @@ const AdminPanelRoleRow = ({role}: Props) => {
 
 	const isTouched =
 		!_.isEqual(
-			_.keys(role.permissions).sort(),
+			_.keys(role.Permissions).sort(),
 			_.keys(grantedPermissions).sort()
 		) || role.name !== editedRole.name;
 
@@ -109,13 +115,33 @@ const AdminPanelRoleRow = ({role}: Props) => {
 	const {id, name} = editedRole;
 
 	const handleEdit = () => {
-		const userToSend = _.pick(editedRole, ['name', 'permissions']);
-		console.log(userToSend);
+		const old_ids = role.Permissions.map((p) => p.id);
+		const new_ids = grantedPermissions.map((p) => p.id);
+		const add_permissions = new_ids.filter((item) => !old_ids.includes(item));
+		const remove_permissions = old_ids.filter(
+			(item) => !new_ids.includes(item)
+		);
+		apiClient
+			.put(`/roles/${role.id}`, {
+				name: editedRole.name,
+				addPermissionIds: add_permissions,
+				removePermissionIds: remove_permissions,
+			})
+			.then(() => {
+				successToast('موفق!', 'نقش مورد نظر با موفقیت به روزرسانی شد.');
+				handleRefresh();
+			})
+			.catch(() => errorToast('خطایی رخ داد !'));
 	};
 
 	const handleDelete = () => {
-		const id = editedRole.id;
-		console.log(id);
+		apiClient
+			.delete(`/roles/${role.id}`)
+			.then(() => {
+				successToast('موفق !', 'نقش مورد نظر با موفقیت حذف شد.');
+				handleRefresh();
+			})
+			.catch(() => errorToast('خطایی رخ داد !'));
 	};
 
 	return (
