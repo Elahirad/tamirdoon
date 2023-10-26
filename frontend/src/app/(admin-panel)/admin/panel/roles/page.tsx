@@ -12,6 +12,7 @@ import {
 	Thead,
 	Tr,
 	VStack,
+	useColorModeValue,
 } from '@chakra-ui/react';
 import {BiEditAlt} from 'react-icons/bi';
 import {MdDelete} from 'react-icons/md';
@@ -70,7 +71,12 @@ export default function Page() {
 				مدیریت نقش ها
 			</Heading>
 			{!inputIsOpen && (
-				<Button colorScheme="blackAlpha" onClick={() => setInputIsOpen(true)}>
+				<Button
+					mt={4}
+					color={useColorModeValue('black', 'white')}
+					bgColor={useColorModeValue('gray.300', 'gray.600')}
+					onClick={() => setInputIsOpen(true)}
+				>
 					افزودن نقش
 				</Button>
 			)}
