@@ -25,6 +25,7 @@ router.get('/', adminAuth('ADMIN_READ'), async (req, res) => {
     }
 
     const { count, rows } = await Admin.findAndCountAll({
+        include: { model: Role, through: { attributes: [] }},
         where: searchConditions,
         limit: perPage,
         offset: (page - 1) * perPage
