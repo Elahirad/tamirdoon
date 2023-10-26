@@ -3,11 +3,12 @@ const _ = require('lodash');
 const router = express.Router();
 const { Role, roleCreateValidate, roleUpdateValidate } = require('../../models/role');
 const {Permission} = require("../../models/permission");
-const req = require('express/lib/request');
 const adminAuth = require('../../middlewares/adminAuth');
 
 router.get('/', adminAuth('ROLE_READ'), async (req, res) => {
-    res.send(await Role.findAll());
+    const roles = await Role.findAll({ include: { model: Permission, through: { attributes: [] }} });
+
+    res.send(roles);
 });
 
 router.get('/:id', adminAuth('ROLE_READ'), async (req, res) => {
@@ -22,7 +23,7 @@ router.get('/:id', adminAuth('ROLE_READ'), async (req, res) => {
     });
 });
 
-router.post('/create', adminAuth('ROLE_CREATE'), async (req, res) => { // needs middleware to do this
+router.post('/create', adminAuth('ROLE_CREATE'), async (req, res) => {
     const {error} = roleCreateValidate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 

@@ -5,6 +5,7 @@ const customers = require('../routes/customers');
 const admins = require('../routes/admins/admins');
 const permissions = require('../routes/admins/permissions');
 const roles = require('../routes/admins/roles');
+const categories = require('../routes/categories');
 const oauth = require('../routes/oauth');
 const error = require('../middlewares/error');
 const helmet = require('helmet');
@@ -22,6 +23,7 @@ module.exports = function (app) {
     app.use('/api/permissions', permissions);
     app.use('/api/roles', roles);
     app.use('/api/admins', admins);
+	app.use('/api/categories', categories);
 	// other routes
 	app.use(error);
 };
